@@ -1,458 +1,1184 @@
+/* ==========================================
+   PIANO LAB
+   Premium Responsive Piano Interface
+========================================== */
+
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+
 :root {
-  --bg: #f3f4f6;
-  --card: #ffffff;
-  --text: #15171b;
-  --muted: #777b85;
-  --border: #e4e5e8;
-  --purple: #7357ff;
+
+  --background: #f4f5f7;
+
+  --surface: #ffffff;
+
+  --surface-soft: #f8f8fa;
+
+  --text: #16181d;
+
+  --muted: #777b84;
+
+  --border: #e5e6e9;
+
+  --dark: #111318;
+
+  --dark-soft: #1b1d23;
+
+  --accent: #7357ff;
+
+  --accent-soft: rgba(115, 87, 255, 0.12);
+
 }
+
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+}
+
 
 body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
+
+  font-family: "DM Sans", sans-serif;
+
+  background: var(--background);
+
   color: var(--text);
-  min-height: 100vh;
+
+  overflow-x: hidden;
+
 }
 
-.app {
-  min-height: 100vh;
+
+button,
+select {
+  font-family: inherit;
 }
 
-/* -------------------------
-   ROTATE SCREEN
-------------------------- */
+
+button {
+  cursor: pointer;
+}
+
+
+/* ==========================================
+   MOBILE ROTATION SCREEN
+========================================== */
 
 .rotate-screen {
   display: none;
 }
 
 
-/* -------------------------
-   HEADER
-------------------------- */
+/* ==========================================
+   APPLICATION
+========================================== */
+
+.app {
+  min-height: 100vh;
+
+  padding-bottom: 430px;
+}
+
+
+/* ==========================================
+   TOP BAR
+========================================== */
 
 .topbar {
-  background: #111318;
+
+  height: 74px;
+
+  padding: 0 32px;
+
+  background: rgba(255,255,255,0.92);
+
+  backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid var(--border);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 50;
+
+}
+
+
+.brand {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+}
+
+
+.brand-mark {
+
+  width: 36px;
+
+  height: 36px;
+
+  border-radius: 10px;
+
+  background: var(--dark);
+
   color: white;
 
-  padding: 20px 28px;
+  display: grid;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  place-items: center;
 
-  gap: 20px;
+  font-size: 18px;
+
 }
 
-.eyebrow,
-.label {
-  font-size: 10px;
+
+.brand-label {
+
+  display: block;
+
+  font-size: 8px;
+
   font-weight: 700;
-  letter-spacing: 1.5px;
-  opacity: 0.6;
-}
 
-h1 {
-  font-size: 24px;
-  margin-top: 4px;
-}
+  letter-spacing: 1.7px;
 
-.top-actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-#status {
-  font-size: 13px;
-  color: #b9bcc4;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-.primary-button {
-  border: none;
-  background: white;
-  color: #111318;
-
-  padding: 11px 18px;
-
-  border-radius: 10px;
-  font-weight: 700;
-}
-
-
-/* -------------------------
-   MAIN
-------------------------- */
-
-main {
-  max-width: 1400px;
-  margin: auto;
-  padding: 24px;
-}
-
-.song-card,
-.practice-card,
-.note-display {
-  background: var(--card);
-  border-radius: 20px;
-  border: 1px solid var(--border);
-}
-
-.song-card {
-  padding: 22px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 20px;
-  margin-bottom: 18px;
-}
-
-.song-card h2,
-.practice-card h2 {
-  margin-top: 5px;
-  font-size: 21px;
-}
-
-.song-info p {
-  margin-top: 7px;
   color: var(--muted);
-  font-size: 14px;
+
 }
 
-.controls {
-  display: flex;
-  gap: 8px;
+
+.brand h1 {
+
+  font-family: "Bricolage Grotesque", sans-serif;
+
+  font-size: 18px;
+
+  line-height: 1;
+
+  margin-top: 3px;
+
 }
 
-.controls button {
-  background: white;
+
+.icon-button {
+
+  width: 38px;
+
+  height: 38px;
+
   border: 1px solid var(--border);
 
-  padding: 11px 15px;
   border-radius: 10px;
+
+  background: white;
+
+  color: var(--text);
+
+  font-size: 18px;
+
 }
 
 
-/* -------------------------
-   PRACTICE CARD
-------------------------- */
+/* ==========================================
+   MAIN CONTENT
+========================================== */
 
-.practice-card {
-  padding: 22px;
+.main-content {
+
+  width: min(1050px, calc(100% - 48px));
+
+  margin: auto;
+
+  padding-top: 60px;
+
 }
 
-.practice-header {
+
+/* ==========================================
+   LESSON HEADER
+========================================== */
+
+.lesson-header {
+
   display: flex;
-  align-items: center;
+
+  align-items: flex-end;
+
   justify-content: space-between;
 
-  gap: 20px;
-  margin-bottom: 28px;
+  gap: 30px;
+
 }
 
-.practice-settings {
+
+.section-label {
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.7px;
+
+  color: var(--muted);
+
+}
+
+
+.lesson-heading h2 {
+
+  font-family: "Bricolage Grotesque", sans-serif;
+
+  font-size: clamp(32px, 4vw, 48px);
+
+  line-height: 1;
+
+  letter-spacing: -1.5px;
+
+  margin-top: 8px;
+
+}
+
+
+.lesson-heading p {
+
+  color: var(--muted);
+
+  font-size: 14px;
+
+  margin-top: 13px;
+
+  max-width: 540px;
+
+  line-height: 1.5;
+
+}
+
+
+.lesson-meta {
+
   display: flex;
+
+  gap: 8px;
+
+}
+
+
+.meta-item {
+
+  display: flex;
+
   align-items: center;
-  gap: 14px;
+
+  gap: 7px;
+
+  padding: 8px 11px;
+
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: 9px;
+
+  color: var(--muted);
+
+  font-size: 11px;
+
 }
 
-.mode-selector {
+
+.meta-item i {
+
+  font-size: 14px;
+
+}
+
+
+/* ==========================================
+   PRACTICE TOOLBAR
+========================================== */
+
+.practice-toolbar {
+
+  margin-top: 42px;
+
+  padding: 7px;
+
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: 13px;
+
   display: flex;
-  background: #f1f2f5;
-  padding: 4px;
-  border-radius: 10px;
+
+  align-items: center;
+
+  justify-content: space-between;
+
 }
 
-.mode-button {
+
+.hand-selector {
+
+  display: flex;
+
+  gap: 3px;
+
+}
+
+
+.hand-button {
+
   border: none;
+
   background: transparent;
 
-  padding: 8px 13px;
-  border-radius: 7px;
+  color: var(--muted);
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
 
   font-size: 12px;
+
   font-weight: 600;
+
 }
 
-.mode-button.active {
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+.hand-button i {
+
+  font-size: 15px;
+
 }
 
-.tempo {
+
+.hand-button.active {
+
+  background: var(--dark);
+
+  color: white;
+
+}
+
+
+.toolbar-right {
+
+  padding-right: 6px;
+
+}
+
+
+.speed-control {
+
   display: flex;
+
   align-items: center;
-  gap: 8px;
+
+  gap: 7px;
 
   color: var(--muted);
-  font-size: 12px;
+
+  font-size: 11px;
+
 }
 
-.tempo select {
+
+.speed-control i {
+
+  font-size: 15px;
+
+}
+
+
+.speed-control select {
+
   border: 1px solid var(--border);
-  background: white;
 
-  padding: 8px;
-  border-radius: 8px;
+  background: var(--surface-soft);
+
+  padding: 7px 9px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+
 }
 
 
-/* -------------------------
+/* ==========================================
+   NOW PLAYING
+========================================== */
+
+.now-playing {
+
+  margin-top: 25px;
+
+  min-height: 110px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border-bottom: 1px solid var(--border);
+
+}
+
+
+.now-playing-label {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.4px;
+
+  color: var(--muted);
+
+}
+
+
+.live-dot {
+
+  width: 7px;
+
+  height: 7px;
+
+  background: var(--accent);
+
+  border-radius: 50%;
+
+}
+
+
+.current-notes {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+}
+
+
+.note {
+
+  background: var(--dark);
+
+  color: white;
+
+  padding: 7px 10px;
+
+  border-radius: 7px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+}
+
+
+.empty-note {
+
+  color: #a2a5ac;
+
+  font-size: 12px;
+
+}
+
+
+/* ==========================================
+   PIANO DOCK
+========================================== */
+
+.piano-dock {
+
+  position: fixed;
+
+  left: 0;
+
+  right: 0;
+
+  bottom: 0;
+
+  z-index: 100;
+
+  background: #111318;
+
+  box-shadow:
+    0 -15px 40px rgba(0,0,0,0.16);
+
+}
+
+
+/* ==========================================
+   PIANO TOPBAR
+========================================== */
+
+.piano-topbar {
+
+  height: 42px;
+
+  padding: 0 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  color: white;
+
+}
+
+
+.piano-title {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+}
+
+
+.piano-title i {
+
+  font-size: 16px;
+
+}
+
+
+.piano-title small {
+
+  color: #777b85;
+
+  font-size: 9px;
+
+  font-weight: 500;
+
+  margin-left: 5px;
+
+}
+
+
+.play-status {
+
+  font-size: 10px;
+
+  color: #888c95;
+
+}
+
+
+/* ==========================================
+   PIANO STAGE
+========================================== */
+
+.piano-stage {
+
+  width: min(1100px, calc(100% - 40px));
+
+  height: 250px;
+
+  margin: auto;
+
+  padding: 9px;
+
+  background: #25272d;
+
+  border-radius: 13px 13px 4px 4px;
+
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.06),
+    0 10px 25px rgba(0,0,0,0.35);
+
+}
+
+
+/* ==========================================
    PIANO
-------------------------- */
-
-.piano-container {
-  width: 100%;
-  overflow: hidden;
-}
+========================================== */
 
 .piano {
+
   position: relative;
 
   width: 100%;
-  height: min(42vw, 380px);
-  min-height: 220px;
+
+  height: 100%;
 
   display: flex;
 
+  overflow: hidden;
+
+  border-radius: 8px 8px 4px 4px;
+
+  background: #0c0d0f;
+
+  touch-action: none;
+
   user-select: none;
-  touch-action: manipulation;
+
 }
 
 
-/* WHITE KEYS */
+/* ==========================================
+   WHITE KEYS
+========================================== */
 
 .key.white {
+
   position: relative;
 
   flex: 1;
+
   height: 100%;
-
-  background: linear-gradient(
-    to bottom,
-    #ffffff,
-    #f1f1f1
-  );
-
-  border: 1px solid #cfd1d5;
-
-  border-radius: 0 0 8px 8px;
-
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-
-  padding-bottom: 14px;
-
-  color: #8a8d94;
-  font-size: 11px;
-
-  transition:
-    background 0.08s ease,
-    transform 0.08s ease;
-}
-
-
-/* BLACK KEYS */
-
-.key.black {
-  position: absolute;
-  z-index: 10;
-
-  width: 3.4%;
-  height: 62%;
 
   background:
     linear-gradient(
-      to bottom,
-      #2b2d33,
-      #07080a
+      90deg,
+      #eeeeee 0%,
+      #ffffff 48%,
+      #e5e5e5 100%
     );
 
-  border-radius: 0 0 7px 7px;
+  border-right: 1px solid #c9c9c9;
+
+  border-bottom: 4px solid #c3c3c3;
 
   display: flex;
+
   align-items: flex-end;
+
   justify-content: center;
 
-  padding-bottom: 10px;
+  padding-bottom: 9px;
 
-  color: #b9bbc1;
-  font-size: 8px;
+  color: #8b8c90;
 
-  box-shadow:
-    0 5px 8px rgba(0,0,0,0.25);
+  font-size: 9px;
 
   transition:
-    background 0.08s ease,
-    transform 0.08s ease;
+    transform 70ms ease,
+    background 70ms ease;
+
 }
 
 
-/* RIGHT HAND */
+.key.white:last-child {
+  border-right: none;
+}
+
+
+/* ==========================================
+   BLACK KEYS
+========================================== */
+
+.key.black {
+
+  position: absolute;
+
+  z-index: 5;
+
+  width: 4.1%;
+
+  height: 61%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #08090b,
+      #292b30 48%,
+      #060709
+    );
+
+  border-radius: 0 0 5px 5px;
+
+  box-shadow:
+    0 7px 8px rgba(0,0,0,0.5);
+
+  color: #777b83;
+
+  font-size: 7px;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: center;
+
+  padding-bottom: 6px;
+
+  transition:
+    transform 70ms ease,
+    background 70ms ease;
+
+}
+
+
+/* ==========================================
+   ACTIVE KEYS
+========================================== */
+
+.key.active {
+
+  transform: translateY(3px);
+
+}
+
 
 .key.active.right-hand {
-  background: #7357ff !important;
+
+  background:
+    linear-gradient(
+      180deg,
+      #8c76ff,
+      #6246ec
+    ) !important;
+
   color: white;
 
-  transform: translateY(3px);
-
   box-shadow:
-    0 0 22px rgba(115,87,255,0.45);
+    0 0 20px rgba(115,87,255,0.5);
+
 }
 
-
-/* LEFT HAND */
 
 .key.active.left-hand {
-  background: #1c9f82 !important;
-  color: white;
 
-  transform: translateY(3px);
+  background:
+    linear-gradient(
+      180deg,
+      #3eb99d,
+      #168b73
+    ) !important;
+
+  color: white;
 
   box-shadow:
-    0 0 22px rgba(28,159,130,0.4);
+    0 0 20px rgba(35,166,139,0.45);
+
 }
 
 
-/* -------------------------
-   NOTE DISPLAY
-------------------------- */
+/* ==========================================
+   PLAYBACK BAR
+========================================== */
 
-.note-display {
-  margin-top: 18px;
-  padding: 20px;
-}
+.playback-bar {
 
-#currentNotes {
+  height: 68px;
+
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 
-  margin-top: 12px;
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 12px;
+
 }
 
-.note {
-  background: #17191f;
-  color: white;
 
-  padding: 8px 12px;
-  border-radius: 8px;
+.playback-icon {
 
-  font-size: 13px;
-  font-weight: 700;
+  width: 38px;
+
+  height: 38px;
+
+  border-radius: 50%;
+
+  border: 1px solid #303239;
+
+  background: #1c1e24;
+
+  color: #aeb1b9;
+
+  display: grid;
+
+  place-items: center;
+
+  font-size: 17px;
+
 }
 
-.empty-note {
-  color: #aaa;
+
+.main-play {
+
+  width: 48px;
+
+  height: 48px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: white;
+
+  color: #111318;
+
+  display: grid;
+
+  place-items: center;
+
+  font-size: 20px;
+
+  box-shadow:
+    0 5px 15px rgba(0,0,0,0.25);
+
 }
+
+
+.main-play:active,
+.playback-icon:active {
+
+  transform: scale(0.94);
+
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
 
 footer {
-  text-align: center;
 
-  padding: 28px;
-  color: #999;
+  width: min(1050px, calc(100% - 48px));
 
-  font-size: 12px;
+  margin: 30px auto;
+
+  display: flex;
+
+  justify-content: space-between;
+
+  color: #aaaeb5;
+
+  font-size: 10px;
+
 }
 
 
-/* -------------------------
-   MOBILE
-------------------------- */
+/* ==========================================
+   TABLET
+========================================== */
 
-@media (max-width: 700px) {
+@media (max-width: 850px) {
+
+  .main-content {
+
+    width: calc(100% - 32px);
+
+    padding-top: 35px;
+
+  }
+
+
+  .lesson-header {
+
+    align-items: flex-start;
+
+    flex-direction: column;
+
+  }
+
+
+  .lesson-meta {
+
+    margin-top: 5px;
+
+  }
+
+
+  .piano-stage {
+
+    width: calc(100% - 24px);
+
+  }
+
+}
+
+
+/* ==========================================
+   MOBILE LANDSCAPE
+========================================== */
+
+@media (max-width: 700px) and (orientation: landscape) {
+
+  .app {
+
+    padding-bottom: 315px;
+
+  }
+
 
   .topbar {
-    padding: 14px 18px;
+
+    height: 52px;
+
+    padding: 0 15px;
+
   }
 
-  main {
-    padding: 14px;
+
+  .brand-mark {
+
+    width: 29px;
+
+    height: 29px;
+
+    font-size: 15px;
+
   }
 
-  .song-card {
-    padding: 16px;
+
+  .brand-label {
+
+    font-size: 6px;
+
   }
 
-  .practice-card {
-    padding: 16px;
+
+  .brand h1 {
+
+    font-size: 15px;
+
   }
 
-  .practice-header {
-    align-items: flex-start;
-    flex-direction: column;
+
+  .main-content {
+
+    width: calc(100% - 28px);
+
+    padding-top: 22px;
+
   }
 
-  .practice-settings {
-    width: 100%;
-    justify-content: space-between;
+
+  .lesson-heading h2 {
+
+    font-size: 26px;
+
   }
 
-  .piano {
-    min-height: 250px;
-    height: 65vw;
+
+  .lesson-heading p {
+
+    display: none;
+
+  }
+
+
+  .lesson-meta {
+
+    display: none;
+
+  }
+
+
+  .practice-toolbar {
+
+    margin-top: 20px;
+
+  }
+
+
+  .now-playing {
+
+    min-height: 60px;
+
+  }
+
+
+  .piano-dock {
+
+    padding-bottom: env(safe-area-inset-bottom);
+
+  }
+
+
+  .piano-topbar {
+
+    height: 30px;
+
+    padding: 0 14px;
+
+  }
+
+
+  .piano-stage {
+
+    height: 190px;
+
+    width: calc(100% - 20px);
+
+    padding: 6px;
+
+  }
+
+
+  .playback-bar {
+
+    height: 48px;
+
+  }
+
+
+  .main-play {
+
+    width: 38px;
+
+    height: 38px;
+
+    font-size: 16px;
+
+  }
+
+
+  .playback-icon {
+
+    width: 30px;
+
+    height: 30px;
+
+    font-size: 14px;
+
+  }
+
+
+  footer {
+
+    display: none;
+
   }
 
 }
 
 
-/* -------------------------
-   PORTRAIT PHONE NOTICE
-------------------------- */
+/* ==========================================
+   MOBILE PORTRAIT
+========================================== */
 
 @media (max-width: 700px) and (orientation: portrait) {
 
   .app {
+
     display: none;
+
   }
+
 
   .rotate-screen {
-    display: flex;
 
     position: fixed;
+
     inset: 0;
 
-    background: #111318;
-    color: white;
+    display: flex;
 
     flex-direction: column;
-    align-items: center;
+
     justify-content: center;
 
+    align-items: center;
+
     text-align: center;
+
+    background: #111318;
+
+    color: white;
+
     padding: 30px;
+
   }
+
 
   .rotate-icon {
-    font-size: 60px;
+
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 20px;
+
+    background: #1d1f25;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 34px;
+
     margin-bottom: 20px;
+
   }
+
 
   .rotate-screen h2 {
-    font-size: 24px;
+
+    font-family: "Bricolage Grotesque", sans-serif;
+
+    font-size: 25px;
+
   }
 
-  .rotate-screen p {
-    max-width: 280px;
-    margin-top: 10px;
 
-    color: #aeb2bb;
+  .rotate-screen p {
+
+    max-width: 280px;
+
+    margin-top: 9px;
+
+    color: #969aa4;
+
+    font-size: 13px;
+
     line-height: 1.5;
+
   }
 
 }
- 
