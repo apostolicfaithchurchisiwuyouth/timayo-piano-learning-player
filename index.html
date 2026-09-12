@@ -4,109 +4,152 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Piano Learning Player</title>
+  <title>Timayo Piano Learning Player</title>
 
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <header class="topbar">
-    <div>
-      <p class="eyebrow">PIANO LEARNING PLAYER</p>
-      <h1>Learn the Piano</h1>
-    </div>
+  <!-- Mobile portrait notice -->
+  <div class="rotate-screen">
+    <div class="rotate-icon">📱</div>
+    <h2>Rotate your device</h2>
+    <p>Turn your phone sideways for the best piano experience.</p>
+  </div>
 
-    <button id="playButton" class="play-button">
-      ▶ Play
-    </button>
-  </header>
 
-  <main>
+  <div class="app">
 
-    <section class="song-card">
+    <header class="topbar">
 
-      <div>
-        <span class="label">NOW PLAYING</span>
-        <h2>My First Piano Piece</h2>
-        <p id="status">Ready to play</p>
+      <div class="brand">
+        <p class="eyebrow">PIANO LEARNING PLAYER</p>
+        <h1>Learn & Play</h1>
       </div>
 
-      <div class="controls">
-        <button id="pauseButton">⏸ Pause</button>
-        <button id="restartButton">↻ Restart</button>
+      <div class="top-actions">
+        <span id="status">Ready</span>
+
+        <button id="playButton" class="primary-button">
+          ▶ Play
+        </button>
       </div>
 
-    </section>
+    </header>
 
 
-    <section class="practice-card">
+    <main>
 
-      <div class="practice-header">
+      <section class="song-card">
+
+        <div class="song-info">
+          <span class="label">CURRENT LESSON</span>
+          <h2>My First Piano Piece</h2>
+          <p>Watch, listen and learn one step at a time.</p>
+        </div>
+
+        <div class="controls">
+
+          <button id="pauseButton">
+            ⏸ Pause
+          </button>
+
+          <button id="restartButton">
+            ↻ Restart
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <section class="practice-card">
+
+        <div class="practice-header">
+
+          <div>
+            <span class="label">PRACTICE MODE</span>
+            <h2 id="modeTitle">Both Hands</h2>
+          </div>
+
+
+          <div class="practice-settings">
+
+            <div class="mode-selector">
+
+              <button class="mode-button active" data-mode="both">
+                Both
+              </button>
+
+              <button class="mode-button" data-mode="right">
+                Right
+              </button>
+
+              <button class="mode-button" data-mode="left">
+                Left
+              </button>
+
+            </div>
+
+
+            <div class="tempo">
+
+              <span>Speed</span>
+
+              <select id="speedSelect">
+                <option value="0.5">50%</option>
+                <option value="0.75">75%</option>
+                <option value="1" selected>100%</option>
+                <option value="1.25">125%</option>
+              </select>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="piano-container">
+
+          <div class="piano" id="piano"></div>
+
+        </div>
+
+      </section>
+
+
+      <section class="note-display">
+
         <div>
-          <span class="label">PRACTICE</span>
-          <h2>Both Hands</h2>
-        </div>
 
-        <div class="tempo">
-          <span>Speed</span>
-          <select id="speedSelect">
-            <option value="0.5">50%</option>
-            <option value="0.75">75%</option>
-            <option value="1" selected>100%</option>
-            <option value="1.25">125%</option>
-          </select>
-        </div>
-      </div>
+          <span class="label">NOW PLAYING</span>
 
+          <div id="currentNotes">
 
-      <div class="piano-wrapper">
+            <span class="empty-note">
+              —
+            </span>
 
-        <div class="piano" id="piano">
-
-          <!-- White keys -->
-
-          <div class="key white" data-note="C4">C</div>
-          <div class="key white" data-note="D4">D</div>
-          <div class="key white" data-note="E4">E</div>
-          <div class="key white" data-note="F4">F</div>
-          <div class="key white" data-note="G4">G</div>
-          <div class="key white" data-note="A4">A</div>
-          <div class="key white" data-note="B4">B</div>
-          <div class="key white" data-note="C5">C</div>
-
-          <!-- Black keys -->
-
-          <div class="key black" data-note="C#4">C#</div>
-          <div class="key black" data-note="D#4">D#</div>
-          <div class="key black" data-note="F#4">F#</div>
-          <div class="key black" data-note="G#4">G#</div>
-          <div class="key black" data-note="A#4">A#</div>
+          </div>
 
         </div>
 
-      </div>
+      </section>
 
-    </section>
-
-
-    <section class="note-display">
-
-      <span class="label">CURRENT NOTES</span>
-
-      <div id="currentNotes">
-        <span class="empty-note">—</span>
-      </div>
-
-    </section>
-
-  </main>
+    </main>
 
 
-  <footer>
-    Piano Learning Player · Version 1
-  </footer>
+    <footer>
+      Piano Learning Player · Version 1
+    </footer>
 
+  </div>
+
+
+  <!-- Tone.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 
   <script src="script.js"></script>
 
