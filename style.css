@@ -1,25 +1,23 @@
 :root {
-  --bg: #f6f7f9;
-  --surface: #ffffff;
-  --surface-dark: #101216;
-  --surface-dark-2: #181b21;
-  --border: #e5e7eb;
-  --text: #111318;
-  --muted: #737983;
-  --muted-dark: #9ca3af;
+  --app-bg: #0b0d11;
+  --panel: #14171d;
+  --panel-2: #1b1f27;
+  --panel-border: #292e38;
 
-  --accent: #6d5dfc;
-  --accent-light: #ece9ff;
+  --text: #ffffff;
+  --muted: #949ba7;
 
-  --white-key: #fdfdfd;
-  --white-key-border: #cfd2d7;
+  --accent: #8b7cff;
 
-  --black-key: #17181c;
+  /* VERY CLEAR PLAY COLORS */
+  --right-color: #8b5cf6;
+  --right-glow: rgba(139, 92, 246, 0.75);
 
-  --right-hand: #6d5dfc;
-  --left-hand: #18a673;
+  --left-color: #10d49a;
+  --left-glow: rgba(16, 212, 154, 0.7);
 
-  --radius: 16px;
+  --both-color: #ffd43b;
+  --both-glow: rgba(255, 212, 59, 0.8);
 }
 
 
@@ -29,310 +27,102 @@
 }
 
 
-html {
-  scroll-behavior: smooth;
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+
+  background: var(--app-bg);
+
+  font-family: "DM Sans", sans-serif;
+
+  overflow: hidden;
 }
 
 
 body {
-  margin: 0;
-  min-height: 100vh;
-
-  background: var(--bg);
   color: var(--text);
-
-  font-family: "DM Sans", sans-serif;
-
-  padding-bottom: 360px;
-}
-
-
-button,
-select {
-  font: inherit;
-}
-
-
-button {
-  border: 0;
-  cursor: pointer;
 }
 
 
 /* =========================================
-   TOP BAR
+   MAIN APP
 ========================================= */
 
-.topbar {
-  height: 72px;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 32px;
-
-  background: rgba(255, 255, 255, 0.92);
-  border-bottom: 1px solid var(--border);
-
-  position: relative;
-  z-index: 20;
-
-  backdrop-filter: blur(14px);
-}
-
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-
-.brand-mark {
-  width: 38px;
-  height: 38px;
-
-  display: grid;
-  place-items: center;
-
-  border-radius: 11px;
-
-  background: var(--text);
-  color: white;
-
-  font-size: 19px;
-}
-
-
-.brand-title {
-  font-family: "Bricolage Grotesque", sans-serif;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 1.1;
-}
-
-
-.brand-subtitle {
-  color: var(--muted);
-  font-size: 11px;
-  margin-top: 3px;
-}
-
-
-.icon-button {
-  width: 40px;
-  height: 40px;
-
-  display: grid;
-  place-items: center;
-
-  border-radius: 12px;
-
-  background: #f0f1f3;
-  color: #444850;
-
-  font-size: 18px;
-}
-
-
-.icon-button:active {
-  transform: scale(0.95);
-}
-
-
-/* =========================================
-   MAIN CONTENT
-========================================= */
-
-.main-content {
-  width: min(1050px, calc(100% - 40px));
-  margin: 0 auto;
-
-  padding: 70px 0;
-}
-
-
-.hero-section {
-  max-width: 700px;
-}
-
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  color: var(--muted);
-
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-}
-
-
-.eyebrow span {
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-  background: var(--accent);
-}
-
-
-.hero-section h1 {
-  margin: 12px 0 12px;
-
-  font-family: "Bricolage Grotesque", sans-serif;
-
-  font-size: clamp(38px, 6vw, 70px);
-  line-height: 0.98;
-
-  letter-spacing: -0.045em;
-}
-
-
-.hero-section p {
-  max-width: 600px;
-
-  color: var(--muted);
-
-  font-size: 16px;
-  line-height: 1.7;
-
-  margin: 0;
-}
-
-
-/* =========================================
-   LESSON CARD
-========================================= */
-
-.lesson-card {
-  margin-top: 50px;
-
-  background: var(--surface);
-
-  border: 1px solid var(--border);
-
-  border-radius: 22px;
-
-  padding: 24px;
-}
-
-
-.lesson-card-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-
-.section-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-}
-
-
-.lesson-card h2 {
-  font-family: "Bricolage Grotesque", sans-serif;
-  font-size: 23px;
-  margin: 5px 0 0;
-}
-
-
-.lesson-status {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-
-  font-size: 12px;
-  color: var(--muted);
-}
-
-
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #9ca3af;
-}
-
-
-.note-preview {
-  display: flex;
-  gap: 10px;
-
-  margin-top: 25px;
-}
-
-
-.preview-note {
-  padding: 8px 13px;
-
-  border-radius: 9px;
-
-  background: #f2f3f5;
-
-  font-size: 12px;
-  font-weight: 600;
-}
-
-
-/* =========================================
-   STICKY PIANO DOCK
-========================================= */
-
-.piano-dock {
+.piano-app {
   position: fixed;
 
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
 
-  z-index: 100;
+  width: 100%;
+  height: 100dvh;
 
-  background: rgba(15, 17, 21, 0.98);
+  background:
+    radial-gradient(
+      circle at 50% -30%,
+      rgba(109, 93, 252, 0.13),
+      transparent 45%
+    ),
+    #0b0d11;
 
-  color: white;
+  display: grid;
 
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  grid-template-rows:
+    auto
+    auto
+    1fr
+    auto;
 
-  box-shadow:
-    0 -15px 40px rgba(0, 0, 0, 0.16);
-
-  padding:
-    10px
-    max(12px, env(safe-area-inset-right))
-    calc(9px + env(safe-area-inset-bottom))
-    max(12px, env(safe-area-inset-left));
+  overflow: hidden;
 }
 
 
 /* =========================================
-   PIANO INFORMATION
+   HEADER
 ========================================= */
 
-.piano-info {
-  width: min(1120px, 100%);
-  margin: 0 auto 8px;
+.app-header {
+  min-height: 52px;
+
+  padding: 7px 16px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+  background: rgba(11, 13, 17, 0.96);
 }
 
 
-.piano-product {
+.app-title-area {
   display: flex;
   align-items: center;
-  gap: 9px;
+
+  gap: 14px;
+
+  min-width: 0;
 }
 
 
-.mini-logo {
+.app-name {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  font-family: "Bricolage Grotesque", sans-serif;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+
+.app-logo {
   width: 28px;
   height: 28px;
 
@@ -341,148 +131,169 @@ button {
 
   border-radius: 8px;
 
-  background: #242832;
+  background: #242833;
 
-  color: #d8d4ff;
+  color: #b5adff;
 
   font-size: 14px;
 }
 
 
-.piano-product-name {
-  font-family: "Bricolage Grotesque", sans-serif;
+.piece-title {
+  color: #cfd3db;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.range-display {
+  flex-shrink: 0;
+
+  color: #a8afbb;
+
   font-size: 12px;
-  font-weight: 700;
-}
+  font-weight: 600;
 
+  padding: 6px 10px;
 
-.piano-piece-name {
-  color: #9ca3af;
-  font-size: 10px;
-  margin-top: 1px;
-}
+  border: 1px solid #2a2f39;
 
+  background: #15181e;
 
-.piano-range {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-
-  color: #777e8a;
-
-  font-size: 9px;
-  letter-spacing: 0.08em;
-}
-
-
-.piano-range strong {
-  color: #d3d6dc;
-  font-size: 10px;
-  letter-spacing: 0;
+  border-radius: 8px;
 }
 
 
 /* =========================================
-   QUICK CONTROLS
+   CONTROLS
 ========================================= */
 
-.quick-controls {
-  width: min(1120px, 100%);
-  margin: 0 auto 8px;
+.control-row {
+  display: grid;
 
-  display: flex;
-  align-items: center;
-
-  gap: 7px;
-}
-
-
-.quick-select {
-  position: relative;
-
-  min-width: 120px;
-  height: 38px;
-
-  display: flex;
-  align-items: center;
+  grid-template-columns:
+    minmax(0, 1.5fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr);
 
   gap: 8px;
 
-  padding: 0 27px 0 10px;
+  padding: 8px 14px;
+
+  background: #0d1015;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+
+.control-card {
+  position: relative;
+
+  min-width: 0;
+
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 0 28px 0 10px;
 
   border-radius: 10px;
 
-  background: #1c1f25;
-  border: 1px solid #2a2e36;
+  border: 1px solid #292e38;
 
-  color: #dce0e6;
+  background: #171a20;
 
   cursor: pointer;
 
   overflow: hidden;
+
+  transition:
+    background 120ms ease,
+    border-color 120ms ease,
+    transform 100ms ease;
 }
 
 
-.quick-select:active {
-  background: #252932;
+.control-card:hover {
+  background: #1d2129;
+  border-color: #383e4b;
 }
 
 
-.quick-select > i:first-child {
-  flex: 0 0 auto;
-
-  color: #aaa2ff;
-
-  font-size: 15px;
+.control-card:active {
+  transform: scale(0.985);
 }
 
 
-.quick-select-text {
+.control-icon {
+  width: 27px;
+  height: 27px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 7px;
+
+  background: #272b35;
+
+  color: #a9a1ff;
+
+  font-size: 14px;
+}
+
+
+.control-info {
   min-width: 0;
 
   display: flex;
   flex-direction: column;
+
+  justify-content: center;
+
+  gap: 3px;
 }
 
 
-.quick-select-text small {
-  font-size: 8px;
-
+.control-info small {
   color: #7f8794;
+
+  font-size: 8px;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
 
   line-height: 1;
 }
 
 
-.quick-select select {
-  appearance: none;
-  -webkit-appearance: none;
+.control-info strong {
+  color: #f1f3f6;
 
-  border: 0;
-  outline: 0;
-
-  background: transparent;
-
-  color: #f2f3f5;
-
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
 
-  padding: 3px 0 0;
+  line-height: 1.1;
 
-  width: 100%;
+  white-space: nowrap;
 
-  cursor: pointer;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
 }
 
 
-.quick-select select option {
-  background: #181b21;
-  color: white;
-}
-
-
-.select-arrow {
+.control-arrow {
   position: absolute;
 
   right: 8px;
@@ -490,35 +301,99 @@ button {
 
   transform: translateY(-50%);
 
-  color: #777e8a;
+  color: #777f8c;
+
+  font-size: 16px;
 
   pointer-events: none;
+}
 
-  font-size: 15px;
+
+/*
+  The invisible select covers the WHOLE control.
+  So clicking the icon, text, arrow or background
+  opens the dropdown.
+*/
+
+.control-card select {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  z-index: 10;
 }
 
 
 /* =========================================
-   PIANO
+   PIANO AREA
 ========================================= */
 
+.piano-area {
+  min-height: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 7px 10px 5px;
+}
+
+
+.piano-top-line {
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 4px 4px;
+
+  color: #8f97a4;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+#pianoMode {
+  color: #b8b0ff;
+}
+
+
 .piano-stage {
-  width: min(1120px, 100%);
-  height: 190px;
+  position: relative;
 
-  margin: 0 auto;
+  flex: 1;
 
-  overflow: hidden;
+  min-height: 0;
 
-  border-radius: 13px;
+  width: 100%;
 
-  background: #090a0d;
+  background:
+    linear-gradient(
+      180deg,
+      #181b21,
+      #0b0d11
+    );
 
-  border: 1px solid #292d35;
+  border:
+    1px solid #292e37;
+
+  border-radius: 12px;
+
+  padding: 7px 6px 8px;
 
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    inset 0 -10px 25px rgba(0, 0, 0, 0.3);
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    0 10px 30px rgba(0,0,0,0.2);
+
+  overflow: hidden;
 }
 
 
@@ -530,7 +405,8 @@ button {
 
   display: flex;
 
-  padding: 0 4px 5px;
+  user-select: none;
+  touch-action: none;
 }
 
 
@@ -545,38 +421,45 @@ button {
 
   height: 100%;
 
-  background: linear-gradient(
-    to bottom,
-    #ffffff 0%,
-    #f7f7f7 75%,
-    #e2e3e5 100%
-  );
+  min-width: 0;
 
-  border-left: 1px solid #c7c9cd;
-  border-bottom: 4px solid #c1c3c8;
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #fafafa 58%,
+      #dedfe2 100%
+    );
 
-  border-radius: 0 0 6px 6px;
+  border-left: 1px solid #bfc2c7;
+  border-bottom: 5px solid #b5b8bd;
+
+  border-radius: 0 0 7px 7px;
 
   cursor: pointer;
 
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  padding-bottom: 9px;
+
   transition:
-    background 80ms ease,
-    transform 80ms ease;
+    background 70ms ease,
+    box-shadow 70ms ease,
+    transform 70ms ease;
+
+  z-index: 1;
 }
 
 
 .white-key:first-child {
-  border-radius: 5px 0 6px 6px;
+  border-radius: 6px 0 7px 7px;
 }
 
 
 .white-key:last-child {
-  border-radius: 0 5px 6px 6px;
-}
-
-
-.white-key:hover {
-  background: #f0f0f1;
+  border-radius: 0 6px 7px 7px;
 }
 
 
@@ -585,21 +468,109 @@ button {
 }
 
 
-.white-key.active {
-  background: #dcd8ff;
+.white-key::after {
+  content: attr(data-note);
 
-  box-shadow:
-    inset 0 -5px 0 rgba(109, 93, 252, 0.3);
+  color: #666b73;
+
+  font-size: clamp(9px, 1.2vw, 13px);
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  pointer-events: none;
 }
 
+
+/*
+  C keys are especially visible.
+*/
+
+.white-key.is-c::after {
+  color: #272a31;
+
+  font-size: clamp(10px, 1.35vw, 15px);
+
+  font-weight: 800;
+}
+
+
+/* RIGHT HAND */
 
 .white-key.active.right-hand {
-  background: #dcd8ff;
+  background:
+    linear-gradient(
+      180deg,
+      #c8b7ff 0%,
+      #9b7cff 52%,
+      #6d42e8 100%
+    );
+
+  border-color: #b39cff;
+
+  box-shadow:
+    inset 0 -8px 0 rgba(72, 31, 177, 0.3),
+    0 0 18px var(--right-glow);
+
+  z-index: 3;
 }
 
 
+.white-key.active.right-hand::after {
+  color: #1d1238;
+}
+
+
+/* LEFT HAND */
+
 .white-key.active.left-hand {
-  background: #ccefe3;
+  background:
+    linear-gradient(
+      180deg,
+      #a5ffe3 0%,
+      #39e3ae 52%,
+      #08a878 100%
+    );
+
+  border-color: #72f2ca;
+
+  box-shadow:
+    inset 0 -8px 0 rgba(0, 103, 74, 0.25),
+    0 0 18px var(--left-glow);
+
+  z-index: 3;
+}
+
+
+.white-key.active.left-hand::after {
+  color: #063c2d;
+}
+
+
+/* BOTH HANDS */
+
+.white-key.active.both-hands {
+  background:
+    linear-gradient(
+      180deg,
+      #fff5a8 0%,
+      #ffd83d 52%,
+      #e8a900 100%
+    );
+
+  border-color: #ffe678;
+
+  box-shadow:
+    inset 0 -8px 0 rgba(128, 79, 0, 0.25),
+    0 0 22px var(--both-glow);
+
+  z-index: 4;
+}
+
+
+.white-key.active.both-hands::after {
+  color: #493400;
 }
 
 
@@ -612,194 +583,333 @@ button {
 
   top: 0;
 
-  width: 3.05%;
+  width: 3.1%;
   height: 61%;
 
-  z-index: 5;
+  transform: translateX(-50%);
 
-  background: linear-gradient(
-    to right,
-    #08090b,
-    #25272c 45%,
-    #0a0b0d
-  );
+  z-index: 10;
 
-  border: 1px solid #050506;
+  background:
+    linear-gradient(
+      90deg,
+      #050608,
+      #2c3037 45%,
+      #090a0c
+    );
+
+  border:
+    1px solid #030405;
 
   border-radius: 0 0 5px 5px;
 
   box-shadow:
-    0 5px 8px rgba(0, 0, 0, 0.4);
+    0 5px 8px rgba(0,0,0,0.55);
 
   cursor: pointer;
 
-  transition:
-    background 80ms ease,
-    transform 80ms ease;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  padding-bottom: 7px;
 }
 
 
-.black-key:hover {
-  background: #303238;
+.black-key::after {
+  content: attr(data-note);
+
+  color: #b9bec7;
+
+  font-size: clamp(7px, 0.85vw, 10px);
+
+  font-weight: 700;
+
+  line-height: 1;
+
+  pointer-events: none;
 }
 
 
 .black-key:active {
-  transform: translateX(-50%) translateY(2px);
+  transform:
+    translateX(-50%)
+    translateY(2px);
 }
 
 
-.black-key.active {
-  background: linear-gradient(
-    to bottom,
-    #7770e9,
-    #4f46b8
-  );
+/* RIGHT */
+
+.black-key.active.right-hand {
+  background:
+    linear-gradient(
+      180deg,
+      #a98cff,
+      #6739d4
+    );
+
+  border-color: #bda9ff;
 
   box-shadow:
-    0 3px 5px rgba(0, 0, 0, 0.5);
+    0 3px 8px rgba(0,0,0,0.5),
+    0 0 18px var(--right-glow);
+
+  z-index: 20;
 }
 
 
+.black-key.active.right-hand::after {
+  color: white;
+}
+
+
+/* LEFT */
+
 .black-key.active.left-hand {
-  background: linear-gradient(
-    to bottom,
-    #35b98a,
-    #16825f
-  );
+  background:
+    linear-gradient(
+      180deg,
+      #6ff4c8,
+      #079a70
+    );
+
+  border-color: #8effd9;
+
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.5),
+    0 0 18px var(--left-glow);
+
+  z-index: 20;
+}
+
+
+.black-key.active.left-hand::after {
+  color: white;
+}
+
+
+/* BOTH */
+
+.black-key.active.both-hands {
+  background:
+    linear-gradient(
+      180deg,
+      #fff28b,
+      #e4a600
+    );
+
+  border-color: #ffe878;
+
+  box-shadow:
+    0 3px 8px rgba(0,0,0,0.5),
+    0 0 22px var(--both-glow);
+
+  z-index: 21;
+}
+
+
+.black-key.active.both-hands::after {
+  color: #332400;
 }
 
 
 /* =========================================
-   PLAYBACK BAR
+   PLAYBACK
 ========================================= */
 
 .playback-bar {
-  width: min(1120px, 100%);
-  margin: 8px auto 0;
+  min-height: 53px;
 
-  min-height: 38px;
+  padding: 6px 14px;
 
   display: grid;
 
   grid-template-columns: 1fr auto 1fr;
 
   align-items: center;
+
+  border-top: 1px solid rgba(255,255,255,0.07);
+
+  background: #0d1015;
 }
 
 
-.playback-left {
+.replay-button {
+  justify-self: start;
+
+  height: 37px;
+
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 0 12px;
+
+  border-radius: 9px;
+
+  color: #e5e7eb;
+
+  background: #1b1f26;
+
+  border: 1px solid #2a2f38;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
 }
 
 
-.playback-right {
-  display: flex;
-  justify-content: flex-end;
+.replay-button:active {
+  transform: scale(0.96);
+}
+
+
+.replay-button i {
+  font-size: 15px;
 }
 
 
 .playback-center {
   display: flex;
   align-items: center;
+
   gap: 9px;
 }
 
 
-.playback-button {
-  height: 34px;
-
-  display: flex;
-  align-items: center;
-  gap: 6px;
-
-  padding: 0 10px;
-
-  border-radius: 9px;
-
-  background: #1c1f25;
-
-  color: #dce0e6;
-
-  font-size: 10px;
-  font-weight: 600;
-}
-
-
-.playback-button:active {
-  transform: scale(0.96);
-}
-
-
 .play-button {
-  width: 36px;
-  height: 36px;
+  width: 39px;
+  height: 39px;
 
   display: grid;
   place-items: center;
 
   border-radius: 50%;
 
-  background: white;
+  background: #ffffff;
+
   color: #111318;
 
-  font-size: 17px;
+  font-size: 19px;
 
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.2);
+    0 5px 15px rgba(0,0,0,0.3);
+
+  cursor: pointer;
 }
 
 
 .play-button:active {
-  transform: scale(0.93);
+  transform: scale(0.92);
 }
 
 
-.playback-text {
+.playback-label {
   display: flex;
   flex-direction: column;
 
-  line-height: 1.1;
+  gap: 2px;
 }
 
 
-.playback-text strong {
-  font-size: 10px;
+.playback-label strong {
+  font-size: 11px;
   font-weight: 700;
+
+  color: #f2f3f5;
 }
 
 
-.playback-text span {
-  color: #7e8591;
-  font-size: 8px;
+.playback-label span {
+  font-size: 9px;
 
-  margin-top: 2px;
+  color: #777f8b;
 }
 
 
-.current-speed {
+.playback-right {
+  justify-self: end;
+}
+
+
+.sample-status {
   display: flex;
   align-items: center;
+
   gap: 5px;
 
-  color: #858c98;
+  color: #737b88;
 
-  font-size: 10px;
+  font-size: 9px;
 }
 
 
-.current-speed i {
+.sample-status i {
+  color: #6ee7b7;
   font-size: 13px;
 }
 
 
 /* =========================================
-   ORIENTATION SCREEN
+   PORTRAIT
 ========================================= */
 
-.orientation-screen {
+.portrait-screen {
   display: none;
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 900px) {
+
+  .piano-app {
+    grid-template-rows:
+      62px
+      64px
+      1fr
+      62px;
+  }
+
+
+  .app-header {
+    padding: 8px 24px;
+  }
+
+
+  .control-row {
+    padding: 9px 24px;
+  }
+
+
+  .control-card {
+    height: 46px;
+  }
+
+
+  .piano-area {
+    padding: 9px 18px 7px;
+  }
+
+
+  .piano-stage {
+    border-radius: 15px;
+  }
+
+
+  .white-key::after {
+    font-size: 12px;
+  }
+
+
+  .black-key::after {
+    font-size: 9px;
+  }
+
 }
 
 
@@ -809,192 +919,302 @@ button {
 
 @media (orientation: landscape) and (max-height: 600px) {
 
-  body {
-    padding-bottom: 230px;
+  .piano-app {
+    grid-template-rows:
+      46px
+      53px
+      1fr
+      48px;
   }
 
 
-  .topbar {
-    height: 48px;
+  .app-header {
+    min-height: 46px;
 
-    padding: 0 14px;
+    padding: 5px 12px;
   }
 
 
-  .brand-mark {
-    width: 29px;
-    height: 29px;
-
-    border-radius: 8px;
-
+  .app-name {
     font-size: 14px;
   }
 
 
-  .brand-title {
+  .app-logo {
+    width: 25px;
+    height: 25px;
+
     font-size: 13px;
   }
 
 
-  .brand-subtitle {
-    display: none;
-  }
-
-
-  .icon-button {
-    width: 32px;
-    height: 32px;
-
-    border-radius: 9px;
-
-    font-size: 15px;
-  }
-
-
-  .main-content {
-    width: calc(100% - 28px);
-
-    padding: 25px 0 40px;
-  }
-
-
-  .hero-section h1 {
-    font-size: 34px;
-  }
-
-
-  .hero-section p {
+  .piece-title {
     font-size: 12px;
-    line-height: 1.5;
   }
 
 
-  .lesson-card {
-    margin-top: 25px;
-    padding: 16px;
-  }
-
-
-  .lesson-card h2 {
-    font-size: 17px;
-  }
-
-
-  .note-preview {
-    margin-top: 15px;
-  }
-
-
-  /* COMPACT DOCK */
-
-  .piano-dock {
-    padding-top: 6px;
-  }
-
-
-  .piano-info {
-    margin-bottom: 4px;
-  }
-
-
-  .piano-product-name {
+  .range-display {
     font-size: 10px;
+
+    padding: 5px 8px;
   }
 
 
-  .piano-piece-name {
-    font-size: 8px;
+  .control-row {
+    padding: 6px 10px;
+
+    gap: 6px;
   }
 
 
-  .mini-logo {
-    width: 23px;
-    height: 23px;
+  .control-card {
+    height: 41px;
+
+    gap: 7px;
+
+    padding-left: 8px;
+    padding-right: 25px;
+  }
+
+
+  .control-icon {
+    width: 24px;
+    height: 24px;
 
     font-size: 12px;
   }
 
 
-  .piano-range {
+  .control-info {
+    gap: 2px;
+  }
+
+
+  .control-info small {
     font-size: 7px;
   }
 
 
-  .piano-range strong {
-    font-size: 8px;
+  .control-info strong {
+    font-size: 11px;
   }
 
 
-  .quick-controls {
-    margin-bottom: 5px;
-
-    gap: 5px;
+  .control-arrow {
+    font-size: 14px;
   }
 
 
-  .quick-select {
-    min-width: 0;
-    flex: 1;
-
-    height: 31px;
-
-    border-radius: 8px;
-
-    gap: 5px;
-
-    padding-left: 7px;
-    padding-right: 20px;
+  .piano-area {
+    padding:
+      4px
+      9px
+      4px;
   }
 
 
-  .quick-select > i:first-child {
-    font-size: 12px;
+  .piano-top-line {
+    height: 18px;
+
+    font-size: 9px;
   }
 
-
-  .quick-select-text small {
-    font-size: 6px;
-  }
-
-
-  .quick-select select {
-    font-size: 8px;
-    padding-top: 2px;
-  }
-
-
-  .select-arrow {
-    right: 5px;
-    font-size: 12px;
-  }
-
-
-  /* SMALL PIANO */
 
   .piano-stage {
-    height: 112px;
+    padding: 5px 5px 6px;
 
     border-radius: 9px;
   }
 
 
-  .black-key {
-    height: 60%;
-    width: 3%;
+  .white-key {
+    padding-bottom: 8px;
+  }
+
+
+  .white-key::after {
+    font-size: 10px;
+  }
+
+
+  .white-key.is-c::after {
+    font-size: 12px;
+  }
+
+
+  .black-key::after {
+    font-size: 7px;
   }
 
 
   .playback-bar {
-    min-height: 31px;
+    min-height: 48px;
 
-    margin-top: 5px;
+    padding: 5px 10px;
   }
 
 
-  .playback-button {
-    height: 28px;
+  .replay-button {
+    height: 33px;
 
-    padding: 0 8px;
+    padding: 0 9px;
+
+    font-size: 9px;
+  }
+
+
+  .replay-button i {
+    font-size: 13px;
+  }
+
+
+  .play-button {
+    width: 35px;
+    height: 35px;
+
+    font-size: 16px;
+  }
+
+
+  .playback-label strong {
+    font-size: 9px;
+  }
+
+
+  .playback-label span {
+    font-size: 7px;
+  }
+
+
+  .sample-status {
+    font-size: 8px;
+  }
+
+}
+
+
+/* =========================================
+   VERY SHORT LANDSCAPE
+========================================= */
+
+@media (orientation: landscape) and (max-height: 430px) {
+
+  .piano-app {
+    grid-template-rows:
+      40px
+      46px
+      1fr
+      43px;
+  }
+
+
+  .app-header {
+    padding: 4px 10px;
+  }
+
+
+  .app-name {
+    font-size: 12px;
+  }
+
+
+  .app-logo {
+    width: 22px;
+    height: 22px;
+
+    font-size: 11px;
+  }
+
+
+  .piece-title {
+    font-size: 10px;
+  }
+
+
+  .range-display {
+    font-size: 8px;
+  }
+
+
+  .control-row {
+    padding: 4px 8px;
+
+    gap: 5px;
+  }
+
+
+  .control-card {
+    height: 38px;
+  }
+
+
+  .control-info small {
+    font-size: 6px;
+  }
+
+
+  .control-info strong {
+    font-size: 9px;
+  }
+
+
+  .control-icon {
+    width: 22px;
+    height: 22px;
+
+    font-size: 11px;
+  }
+
+
+  .piano-top-line {
+    height: 15px;
+
+    font-size: 7px;
+  }
+
+
+  .piano-area {
+    padding:
+      2px
+      7px
+      3px;
+  }
+
+
+  .piano-stage {
+    padding: 4px;
+  }
+
+
+  .white-key {
+    padding-bottom: 5px;
+  }
+
+
+  .white-key::after {
+    font-size: 8px;
+  }
+
+
+  .white-key.is-c::after {
+    font-size: 10px;
+  }
+
+
+  .black-key::after {
+    font-size: 6px;
+  }
+
+
+  .playback-bar {
+    min-height: 43px;
+
+    padding: 3px 8px;
+  }
+
+
+  .replay-button {
+    height: 29px;
 
     font-size: 8px;
   }
@@ -1008,110 +1228,63 @@ button {
   }
 
 
-  .playback-center {
-    gap: 6px;
-  }
-
-
-  .playback-text strong {
+  .playback-label strong {
     font-size: 8px;
   }
 
 
-  .playback-text span {
+  .playback-label span,
+  .sample-status {
     display: none;
-  }
-
-
-  .current-speed {
-    font-size: 8px;
   }
 
 }
 
 
 /* =========================================
-   VERY SHORT LANDSCAPE PHONES
-========================================= */
-
-@media (orientation: landscape) and (max-height: 430px) {
-
-  body {
-    padding-bottom: 205px;
-  }
-
-
-  .main-content {
-    padding-top: 15px;
-  }
-
-
-  .hero-section h1 {
-    font-size: 28px;
-  }
-
-
-  .hero-section p {
-    display: none;
-  }
-
-
-  .lesson-card {
-    margin-top: 15px;
-  }
-
-
-  .piano-stage {
-    height: 94px;
-  }
-
-}
-
-
-/* =========================================
-   PORTRAIT
+   PORTRAIT NOTICE
 ========================================= */
 
 @media (orientation: portrait) {
 
-  body {
-    overflow: hidden;
+  .piano-app {
+    display: none;
   }
 
 
-  .orientation-screen {
+  .portrait-screen {
     position: fixed;
 
     inset: 0;
 
-    z-index: 1000;
+    z-index: 9999;
 
     display: grid;
+
     place-items: center;
 
-    padding: 24px;
+    padding: 25px;
 
-    background: #101216;
-    color: white;
+    background: #0b0d11;
   }
 
 
-  .orientation-card {
+  .portrait-card {
     width: min(330px, 100%);
-
-    text-align: center;
 
     padding: 30px 24px;
 
+    text-align: center;
+
     border-radius: 22px;
 
-    background: #181b21;
+    background: #171a20;
 
-    border: 1px solid #2a2e36;
+    border: 1px solid #2a2f38;
   }
 
 
-  .orientation-icon {
+  .portrait-icon {
     width: 58px;
     height: 58px;
 
@@ -1122,7 +1295,7 @@ button {
 
     border-radius: 17px;
 
-    background: #272a32;
+    background: #242832;
 
     color: #aaa2ff;
 
@@ -1130,22 +1303,23 @@ button {
   }
 
 
-  .orientation-card h2 {
-    font-family: "Bricolage Grotesque", sans-serif;
-
+  .portrait-card h2 {
     margin: 0 0 8px;
+
+    font-family: "Bricolage Grotesque", sans-serif;
 
     font-size: 23px;
   }
 
 
-  .orientation-card p {
+  .portrait-card p {
     margin: 0;
 
     color: #9ca3af;
 
     font-size: 13px;
-    line-height: 1.6;
+
+    line-height: 1.5;
   }
 
 }
