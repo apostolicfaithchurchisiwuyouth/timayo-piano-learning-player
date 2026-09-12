@@ -1,6 +1,5 @@
 /* =========================================================
    PIANO LAB
-   Main piano + playback controller
 ========================================================= */
 
 
@@ -8,11 +7,20 @@
    DOM
 ========================================================= */
 
-const pianoElement = document.getElementById("piano");
+const piano = document.getElementById("piano");
 
 const pieceSelect = document.getElementById("pieceSelect");
 const handSelect = document.getElementById("handSelect");
 const speedSelect = document.getElementById("speedSelect");
+
+const pieceTitle = document.getElementById("pieceTitle");
+const pieceControlText = document.getElementById("pieceControlText");
+
+const handControlText = document.getElementById("handControlText");
+const speedControlText = document.getElementById("speedControlText");
+
+const pianoStatus = document.getElementById("pianoStatus");
+const pianoMode = document.getElementById("pianoMode");
 
 const replayButton = document.getElementById("replayButton");
 const playButton = document.getElementById("playButton");
@@ -22,21 +30,9 @@ const playIcon = document.getElementById("playIcon");
 const playbackStatus = document.getElementById("playbackStatus");
 const playbackSubstatus = document.getElementById("playbackSubstatus");
 
-const lessonStatus = document.getElementById("lessonStatus");
-const lessonModeTitle = document.getElementById("lessonModeTitle");
-
-const speedDisplay = document.getElementById("speedDisplay");
-
-const mainPieceTitle = document.getElementById("mainPieceTitle");
-const mainPieceDescription = document.getElementById("mainPieceDescription");
-
-const pianoPieceName = document.getElementById("pianoPieceName");
-
-const notePreview = document.getElementById("notePreview");
-
 
 /* =========================================================
-   PIANO SETTINGS
+   PIANO RANGE
 ========================================================= */
 
 const START_OCTAVE = 2;
@@ -65,7 +61,7 @@ const highlightTimers = new Set();
 
 
 /* =========================================================
-   NOTE DATA
+   NOTES
 ========================================================= */
 
 const noteNames = [
@@ -84,45 +80,40 @@ const noteNames = [
 ];
 
 
-function buildNoteList() {
+function createNoteList() {
 
   const notes = [];
 
-  for (let octave = START_OCTAVE; octave <= END_OCTAVE; octave++) {
+  for (
+    let octave = START_OCTAVE;
+    octave <= END_OCTAVE;
+    octave++
+  ) {
 
     for (const note of noteNames) {
 
-      if (octave === END_OCTAVE && note !== "C") {
+      if (
+        octave === END_OCTAVE &&
+        note !== "C"
+      ) {
         continue;
       }
 
       notes.push(`${note}${octave}`);
     }
+
   }
 
   return notes;
 }
 
 
-const pianoNotes = buildNoteList();
+const pianoNotes = createNoteList();
 
 
 /* =========================================================
-   SONG DATA
+   SONGS
 ========================================================= */
-
-/*
-  NOTE:
-
-  "Gentle Beginning" is an original practice piece.
-
-  "All of Me" is intentionally NOT given a note-for-note
-  copyrighted transcription here.
-
-  When you provide your own legally obtained arrangement,
-  MIDI or MusicXML, we can replace the All of Me data below.
-*/
-
 
 const songs = {
 
@@ -131,58 +122,56 @@ const songs = {
     title: "Gentle Beginning",
 
     description:
-      "A simple beginner piece for learning basic piano movement, timing and two-hand coordination.",
-
-    tempo: 72,
+      "A simple beginner piano exercise.",
 
     steps: [
 
       {
         right: ["C4"],
         left: ["C3"],
-        duration: 1.0
+        duration: 1
       },
 
       {
         right: ["E4"],
         left: ["G2"],
-        duration: 1.0
+        duration: 1
       },
 
       {
         right: ["G4"],
         left: ["C3"],
-        duration: 1.0
+        duration: 1
       },
 
       {
         right: ["E4"],
         left: ["G2"],
-        duration: 1.0
+        duration: 1
       },
 
       {
         right: ["C4", "E4"],
         left: ["C3"],
-        duration: 1.0
+        duration: 1
       },
 
       {
         right: ["D4", "G4"],
         left: ["G2"],
-        duration: 1.0
+        duration: 1
       },
 
       {
         right: ["C4", "E4"],
         left: ["C3"],
-        duration: 1.0
+        duration: 1
       },
 
       {
         right: ["G4"],
         left: ["G2"],
-        duration: 1.0
+        duration: 1
       }
 
     ]
@@ -190,14 +179,17 @@ const songs = {
   },
 
 
+  /*
+    The actual All of Me arrangement will be inserted
+    when you provide your own MIDI, MusicXML or notes.
+  */
+
   allofme: {
 
     title: "All of Me",
 
     description:
-      "Your arrangement will be added here. Import your own MIDI, MusicXML or note arrangement to make this playable.",
-
-    tempo: 72,
+      "Your arrangement will be added here.",
 
     steps: []
 
@@ -207,7 +199,7 @@ const songs = {
 
 
 /* =========================================================
-   TONE.JS PIANO
+   REAL PIANO SOUND
 ========================================================= */
 
 const sampler = new Tone.Sampler({
@@ -231,24 +223,35 @@ const sampler = new Tone.Sampler({
 
 
 /* =========================================================
-   AUDIO INITIALIZATION
+   AUDIO
 ========================================================= */
 
 async function ensureAudioReady() {
 
-  if (!audioReady) {
-
-    updateStatus(
-      "Loading piano",
-      "Preparing real piano samples..."
-    );
-
-    await Tone.start();
-
-    await Tone.loaded();
-
-    audioReady = true;
+  if (audioReady) {
+    return;
   }
+
+  pianoStatus.textContent =
+    "Loading piano sound...";
+
+  playbackStatus.textContent =
+    "Loading piano";
+
+  playbackSubstatus.textContent =
+    "Preparing piano sound";
+
+
+  await Tone.start();
+
+  await Tone.loaded();
+
+
+  audioReady = true;
+
+
+  pianoStatus.textContent =
+    "Ready";
 
 }
 
@@ -259,107 +262,152 @@ async function ensureAudioReady() {
 
 function createPiano() {
 
-  pianoElement.innerHTML = "";
+  piano.innerHTML = "";
 
-  const whiteNotes = pianoNotes.filter(
-    note => !note.includes("#")
-  );
 
-  const whiteKeyElements = {};
+  const whiteNotes =
+    pianoNotes.filter(
+      note => !note.includes("#")
+    );
 
 
   /* -----------------------------------------
      WHITE KEYS
   ----------------------------------------- */
 
-  whiteNotes.forEach((note) => {
+  whiteNotes.forEach(note => {
 
-    const key = document.createElement("div");
+    const key =
+      document.createElement("div");
 
-    key.className = "white-key";
 
-    key.dataset.note = note;
+    key.className =
+      "white-key";
 
-    key.addEventListener("pointerdown", async (event) => {
 
-      event.preventDefault();
+    key.dataset.note =
+      note;
 
-      await playManualNote(note, key);
 
-    });
+    if (note.startsWith("C")) {
 
-    pianoElement.appendChild(key);
+      key.classList.add("is-c");
 
-    whiteKeyElements[note] = key;
+    }
+
+
+    key.addEventListener(
+      "pointerdown",
+      async event => {
+
+        event.preventDefault();
+
+        await playManualNote(
+          note,
+          key
+        );
+
+      }
+    );
+
+
+    piano.appendChild(key);
 
   });
 
 
   /* -----------------------------------------
-     BLACK KEYS
+     BLACK KEY POSITION
   ----------------------------------------- */
 
   const blackPositions = {
+
     "C#": 1,
     "D#": 2,
     "F#": 4,
     "G#": 5,
     "A#": 6
+
   };
+
+
+  const whiteKeyCount =
+    whiteNotes.length;
 
 
   pianoNotes
     .filter(note => note.includes("#"))
     .forEach(note => {
 
-      const noteName = note.replace(/[0-9]/g, "");
+      const noteName =
+        note.replace(/[0-9]/g, "");
+
 
       const octave =
-        parseInt(note.replace(/\D/g, ""), 10);
+        parseInt(
+          note.replace(/\D/g, ""),
+          10
+        );
 
-      const previousWhiteCount =
-        whiteNotes.filter(whiteNote => {
 
-          const whiteOctave =
-            parseInt(
-              whiteNote.replace(/\D/g, ""),
-              10
-            );
+      const whitesBefore =
+        whiteNotes.filter(
+          whiteNote => {
 
-          return whiteOctave < octave;
+            const whiteOctave =
+              parseInt(
+                whiteNote.replace(/\D/g, ""),
+                10
+              );
 
-        }).length;
+
+            return whiteOctave < octave;
+
+          }
+        ).length;
+
 
       const position =
-        previousWhiteCount +
+        whitesBefore +
         blackPositions[noteName];
 
 
-      const percentage =
-        (position / whiteNotes.length) * 100;
+      const left =
+        (position / whiteKeyCount) * 100;
 
 
-      const key = document.createElement("div");
-
-      key.className = "black-key";
-
-      key.dataset.note = note;
-
-      key.style.left = `${percentage}%`;
-
-      key.style.transform = "translateX(-50%)";
+      const key =
+        document.createElement("div");
 
 
-      key.addEventListener("pointerdown", async (event) => {
-
-        event.preventDefault();
-
-        await playManualNote(note, key);
-
-      });
+      key.className =
+        "black-key";
 
 
-      pianoElement.appendChild(key);
+      key.dataset.note =
+        note;
+
+
+      key.style.left =
+        `${left}%`;
+
+
+      key.addEventListener(
+        "pointerdown",
+        async event => {
+
+          event.preventDefault();
+
+          await playManualNote(
+            note,
+            key
+          );
+
+        }
+      );
+
+
+      piano.appendChild(key);
 
     });
 
@@ -367,33 +415,37 @@ function createPiano() {
 
 
 /* =========================================================
-   MANUAL PIANO
+   MANUAL NOTE
 ========================================================= */
 
-async function playManualNote(note, keyElement) {
+async function playManualNote(
+  note,
+  key
+) {
 
   try {
 
     await ensureAudioReady();
+
 
     sampler.triggerAttackRelease(
       note,
       "4n"
     );
 
+
     highlightKey(
       note,
       0.45,
-      "right"
+      "both"
     );
+
 
   } catch (error) {
 
-    console.error("Piano sound error:", error);
-
-    updateStatus(
-      "Audio error",
-      "Tap the piano again to retry."
+    console.error(
+      "Piano audio error:",
+      error
     );
 
   }
@@ -402,12 +454,12 @@ async function playManualNote(note, keyElement) {
 
 
 /* =========================================================
-   FIND PIANO KEY
+   GET KEY
 ========================================================= */
 
 function getKey(note) {
 
-  return pianoElement.querySelector(
+  return piano.querySelector(
     `[data-note="${note}"]`
   );
 
@@ -420,23 +472,22 @@ function getKey(note) {
 
 function clearHighlights() {
 
-  highlightTimers.forEach(timer => {
-
-    clearTimeout(timer);
-
-  });
+  highlightTimers.forEach(
+    timer => clearTimeout(timer)
+  );
 
   highlightTimers.clear();
 
 
-  pianoElement
+  piano
     .querySelectorAll(".active")
     .forEach(key => {
 
       key.classList.remove(
         "active",
         "right-hand",
-        "left-hand"
+        "left-hand",
+        "both-hands"
       );
 
     });
@@ -445,41 +496,73 @@ function clearHighlights() {
 
 
 /* =========================================================
-   HIGHLIGHT KEY
+   HIGHLIGHT
 ========================================================= */
 
 function highlightKey(
   note,
   duration,
-  hand = "right"
+  hand
 ) {
 
-  const key = getKey(note);
+  const key =
+    getKey(note);
 
-  if (!key) return;
+
+  if (!key) {
+    return;
+  }
 
 
   key.classList.add("active");
 
-  key.classList.add(
-    hand === "left"
-      ? "left-hand"
-      : "right-hand"
+
+  key.classList.remove(
+    "right-hand",
+    "left-hand",
+    "both-hands"
   );
 
 
-  const timer = setTimeout(() => {
+  if (hand === "right") {
 
-    key.classList.remove("active");
+    key.classList.add(
+      "right-hand"
+    );
 
-    key.classList.remove(
-      "right-hand",
+  }
+
+  else if (hand === "left") {
+
+    key.classList.add(
       "left-hand"
     );
 
-    highlightTimers.delete(timer);
+  }
 
-  }, duration * 1000);
+  else {
+
+    key.classList.add(
+      "both-hands"
+    );
+
+  }
+
+
+  const timer =
+    setTimeout(() => {
+
+      key.classList.remove(
+        "active",
+        "right-hand",
+        "left-hand",
+        "both-hands"
+      );
+
+
+      highlightTimers.delete(timer);
+
+    }, duration * 1000);
 
 
   highlightTimers.add(timer);
@@ -488,30 +571,41 @@ function highlightKey(
 
 
 /* =========================================================
-   PLAY CURRENT STEP
+   PLAY STEP
 ========================================================= */
 
-async function playCurrentStep() {
+function playCurrentStep() {
 
-  const song = songs[selectedSong];
+  const song =
+    songs[selectedSong];
 
-  if (!song || song.steps.length === 0) {
 
-    updateStatus(
-      "Arrangement needed",
-      "Add your All of Me arrangement first."
-    );
+  if (
+    !song ||
+    song.steps.length === 0
+  ) {
 
     playing = false;
 
     updatePlayButton();
+
+    pianoStatus.textContent =
+      "Arrangement needed";
+
+    playbackStatus.textContent =
+      "Arrangement needed";
+
+    playbackSubstatus.textContent =
+      "Add your arrangement first.";
 
     return;
 
   }
 
 
-  if (currentStep >= song.steps.length) {
+  if (
+    currentStep >= song.steps.length
+  ) {
 
     finishPlayback();
 
@@ -520,21 +614,19 @@ async function playCurrentStep() {
   }
 
 
-  const step = song.steps[currentStep];
+  const step =
+    song.steps[currentStep];
+
 
   const duration =
-    step.duration / playbackSpeed;
+    step.duration /
+    playbackSpeed;
 
 
-  const notesToPlay = [];
-
-  const rightNotes = [];
-  const leftNotes = [];
+  const notes = [];
 
 
-  /* -----------------------------------------
-     SELECT HAND
-  ----------------------------------------- */
+  /* RIGHT HAND */
 
   if (
     practiceMode === "both" ||
@@ -543,14 +635,20 @@ async function playCurrentStep() {
 
     step.right.forEach(note => {
 
-      rightNotes.push(note);
+      notes.push(note);
 
-      notesToPlay.push(note);
+      highlightKey(
+        note,
+        duration,
+        "right"
+      );
 
     });
 
   }
 
+
+  /* LEFT HAND */
 
   if (
     practiceMode === "both" ||
@@ -559,104 +657,89 @@ async function playCurrentStep() {
 
     step.left.forEach(note => {
 
-      leftNotes.push(note);
+      notes.push(note);
 
-      notesToPlay.push(note);
+      highlightKey(
+        note,
+        duration,
+        "left"
+      );
 
     });
 
   }
 
 
-  /* -----------------------------------------
-     PLAY NOTES
-  ----------------------------------------- */
+  /* PLAY TOGETHER */
 
-  if (notesToPlay.length > 0) {
+  if (notes.length > 0) {
 
     sampler.triggerAttackRelease(
-      notesToPlay,
+      notes,
       duration
     );
 
   }
 
 
-  /* -----------------------------------------
-     HIGHLIGHT RIGHT HAND
-  ----------------------------------------- */
-
-  rightNotes.forEach(note => {
-
-    highlightKey(
-      note,
-      duration,
-      "right"
-    );
-
-  });
+  pianoStatus.textContent =
+    `Playing ${currentStep + 1} / ${song.steps.length}`;
 
 
-  /* -----------------------------------------
-     HIGHLIGHT LEFT HAND
-  ----------------------------------------- */
-
-  leftNotes.forEach(note => {
-
-    highlightKey(
-      note,
-      duration,
-      "left"
-    );
-
-  });
+  playbackStatus.textContent =
+    "Playing";
 
 
-  /* -----------------------------------------
-     UPDATE UI
-  ----------------------------------------- */
-
-  updateStatus(
-    `Step ${currentStep + 1}`,
-    `${song.steps.length} steps`
-  );
+  playbackSubstatus.textContent =
+    `${currentStep + 1} of ${song.steps.length}`;
 
 
-  /* -----------------------------------------
-     MOVE TO NEXT STEP
-  ----------------------------------------- */
+  playbackTimer =
+    setTimeout(() => {
 
-  playbackTimer = setTimeout(() => {
+      if (!playing) {
+        return;
+      }
 
-    if (!playing) return;
 
-    currentStep++;
+      currentStep++;
 
-    playCurrentStep();
 
-  }, duration * 1000);
+      playCurrentStep();
+
+    }, duration * 1000);
 
 }
 
 
 /* =========================================================
-   START PLAYBACK
+   START
 ========================================================= */
 
 async function startPlayback() {
 
-  if (playing) return;
+  if (playing) {
+    return;
+  }
 
 
-  const song = songs[selectedSong];
+  const song =
+    songs[selectedSong];
 
 
-  if (!song || song.steps.length === 0) {
+  if (
+    !song ||
+    song.steps.length === 0
+  ) {
 
-    updateStatus(
-      "Arrangement needed",
-      "Add your All of Me arrangement first."
-    );
+    pianoStatus.textContent =
+      "Arrangement needed";
+
+    playbackStatus.textContent =
+      "Arrangement needed";
+
+    playbackSubstatus.textContent =
+      "Add your arrangement first.";
 
     return;
 
@@ -667,26 +750,24 @@ async function startPlayback() {
 
     await ensureAudioReady();
 
+
     playing = true;
+
 
     updatePlayButton();
 
-    updateLessonStatus("Playing");
 
     playCurrentStep();
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     console.error(error);
 
     playing = false;
 
     updatePlayButton();
-
-    updateStatus(
-      "Could not start",
-      "Tap play again."
-    );
 
   }
 
@@ -699,7 +780,9 @@ async function startPlayback() {
 
 function pausePlayback() {
 
-  if (!playing) return;
+  if (!playing) {
+    return;
+  }
 
 
   playing = false;
@@ -707,7 +790,9 @@ function pausePlayback() {
 
   if (playbackTimer) {
 
-    clearTimeout(playbackTimer);
+    clearTimeout(
+      playbackTimer
+    );
 
     playbackTimer = null;
 
@@ -718,16 +803,20 @@ function pausePlayback() {
 
   clearHighlights();
 
+
   updatePlayButton();
 
 
-  updateStatus(
-    "Paused",
-    "Press play to continue."
-  );
+  pianoStatus.textContent =
+    "Paused";
 
 
-  updateLessonStatus("Paused");
+  playbackStatus.textContent =
+    "Paused";
+
+
+  playbackSubstatus.textContent =
+    "Press play to continue.";
 
 }
 
@@ -743,7 +832,9 @@ function replayPlayback() {
 
   if (playbackTimer) {
 
-    clearTimeout(playbackTimer);
+    clearTimeout(
+      playbackTimer
+    );
 
     playbackTimer = null;
 
@@ -761,13 +852,16 @@ function replayPlayback() {
   updatePlayButton();
 
 
-  updateStatus(
-    "Ready",
-    "Press play to begin."
-  );
+  pianoStatus.textContent =
+    "Ready";
 
 
-  updateLessonStatus("Ready");
+  playbackStatus.textContent =
+    "Ready";
+
+
+  playbackSubstatus.textContent =
+    "Press play to begin.";
 
 }
 
@@ -784,24 +878,31 @@ function finishPlayback() {
 
   playbackTimer = null;
 
+
   sampler.releaseAll();
 
   clearHighlights();
 
+
   updatePlayButton();
 
-  updateStatus(
-    "Complete",
-    "Press play to listen again."
-  );
 
-  updateLessonStatus("Complete");
+  pianoStatus.textContent =
+    "Complete";
+
+
+  playbackStatus.textContent =
+    "Complete";
+
+
+  playbackSubstatus.textContent =
+    "Press play to listen again.";
 
 }
 
 
 /* =========================================================
-   PLAY BUTTON UI
+   PLAY ICON
 ========================================================= */
 
 function updatePlayButton() {
@@ -811,15 +912,19 @@ function updatePlayButton() {
     playIcon.className =
       "ri-pause-fill";
 
+
     playButton.setAttribute(
       "aria-label",
       "Pause"
     );
 
-  } else {
+  }
+
+  else {
 
     playIcon.className =
       "ri-play-fill";
+
 
     playButton.setAttribute(
       "aria-label",
@@ -832,73 +937,43 @@ function updatePlayButton() {
 
 
 /* =========================================================
-   STATUS
+   PIECE
 ========================================================= */
 
-function updateStatus(
-  mainText,
-  subText
-) {
+function updatePiece() {
 
-  playbackStatus.textContent =
-    mainText;
-
-  playbackSubstatus.textContent =
-    subText;
-
-  lessonStatus.textContent =
-    mainText;
-
-}
+  const song =
+    songs[selectedSong];
 
 
-/* =========================================================
-   LESSON STATUS
-========================================================= */
-
-function updateLessonStatus(status) {
-
-  lessonStatus.textContent =
-    status;
-
-}
+  if (!song) {
+    return;
+  }
 
 
-/* =========================================================
-   PIECE UI
-========================================================= */
-
-function updatePieceUI() {
-
-  const song = songs[selectedSong];
-
-  if (!song) return;
-
-
-  mainPieceTitle.textContent =
+  pieceTitle.textContent =
     song.title;
 
 
-  mainPieceDescription.textContent =
-    song.description;
-
-
-  pianoPieceName.textContent =
+  pieceControlText.textContent =
     song.title;
-
-
-  updateNotePreview();
 
 
   replayPlayback();
 
 
-  if (selectedSong === "allofme") {
+  if (
+    selectedSong === "allofme"
+  ) {
 
-    updateStatus(
-      "Arrangement needed",
-      "Your arrangement will appear here."
-    );
+    pianoStatus.textContent =
+      "Arrangement needed";
+
+    playbackStatus.textContent =
+      "All of Me";
+
+    playbackSubstatus.textContent =
+      "Your arrangement will be added here.";
 
   }
 
@@ -906,73 +981,12 @@ function updatePieceUI() {
 
 
 /* =========================================================
-   NOTE PREVIEW
+   HAND
 ========================================================= */
 
-function updateNotePreview() {
+function updateHand() {
 
-  const song = songs[selectedSong];
-
-  notePreview.innerHTML = "";
-
-
-  if (!song || song.steps.length === 0) {
-
-    const empty = document.createElement("div");
-
-    empty.className = "preview-note";
-
-    empty.textContent =
-      "Waiting for arrangement";
-
-    notePreview.appendChild(empty);
-
-    return;
-
-  }
-
-
-  const previewNotes = [];
-
-
-  song.steps.slice(0, 4).forEach(step => {
-
-    if (step.right[0]) {
-
-      previewNotes.push(
-        step.right[0]
-      );
-
-    }
-
-  });
-
-
-  previewNotes.forEach(note => {
-
-    const item =
-      document.createElement("div");
-
-    item.className =
-      "preview-note";
-
-    item.textContent =
-      note;
-
-    notePreview.appendChild(item);
-
-  });
-
-}
-
-
-/* =========================================================
-   HAND UI
-========================================================= */
-
-function updateHandUI() {
-
-  const names = {
+  const labels = {
 
     both: "Both Hands",
 
@@ -983,8 +997,16 @@ function updateHandUI() {
   };
 
 
-  lessonModeTitle.textContent =
-    names[practiceMode];
+  const label =
+    labels[practiceMode];
+
+
+  handControlText.textContent =
+    label;
+
+
+  pianoMode.textContent =
+    label;
 
 
   replayPlayback();
@@ -993,13 +1015,28 @@ function updateHandUI() {
 
 
 /* =========================================================
-   SPEED UI
+   SPEED
 ========================================================= */
 
-function updateSpeedUI() {
+function updateSpeed() {
 
-  speedDisplay.textContent =
-    `${playbackSpeed}×`;
+  const labels = {
+
+    "0.5": "0.5× Slow",
+
+    "0.75": "0.75×",
+
+    "1": "1× Normal",
+
+    "1.25": "1.25×",
+
+    "1.5": "1.5× Fast"
+
+  };
+
+
+  speedControlText.textContent =
+    labels[String(playbackSpeed)];
 
 }
 
@@ -1018,7 +1055,8 @@ pieceSelect.addEventListener(
     selectedSong =
       pieceSelect.value;
 
-    updatePieceUI();
+
+    updatePiece();
 
   }
 );
@@ -1033,7 +1071,8 @@ handSelect.addEventListener(
     practiceMode =
       handSelect.value;
 
-    updateHandUI();
+
+    updateHand();
 
   }
 );
@@ -1046,15 +1085,18 @@ speedSelect.addEventListener(
   () => {
 
     playbackSpeed =
-      Number(speedSelect.value);
+      Number(
+        speedSelect.value
+      );
 
-    updateSpeedUI();
+
+    updateSpeed();
 
   }
 );
 
 
-/* PLAY / PAUSE */
+/* PLAY */
 
 playButton.addEventListener(
   "click",
@@ -1064,7 +1106,9 @@ playButton.addEventListener(
 
       pausePlayback();
 
-    } else {
+    }
+
+    else {
 
       await startPlayback();
 
@@ -1086,33 +1130,16 @@ replayButton.addEventListener(
 );
 
 
-/* SETTINGS */
-
-document
-  .getElementById("settingsButton")
-  .addEventListener(
-    "click",
-    () => {
-
-      updateStatus(
-        "Settings",
-        "Settings will be available soon."
-      );
-
-    }
-  );
-
-
 /* =========================================================
    INITIALIZE
 ========================================================= */
 
 createPiano();
 
-updatePieceUI();
+updatePiece();
 
-updateHandUI();
+updateHand();
 
-updateSpeedUI();
+updateSpeed();
 
 updatePlayButton();
