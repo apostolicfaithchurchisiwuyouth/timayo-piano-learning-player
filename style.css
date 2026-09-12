@@ -1,0 +1,254 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f6f8;
+  color: #111827;
+  min-height: 100vh;
+}
+
+.topbar {
+  padding: 24px 18px;
+  background: #111827;
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eyebrow,
+.label {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  opacity: 0.65;
+}
+
+h1 {
+  font-size: 24px;
+  margin-top: 5px;
+}
+
+.play-button {
+  border: none;
+  background: white;
+  color: #111827;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+main {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px 16px 40px;
+}
+
+.song-card,
+.practice-card,
+.note-display {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+}
+
+.song-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.song-card h2,
+.practice-card h2 {
+  margin-top: 6px;
+  font-size: 20px;
+}
+
+#status {
+  margin-top: 6px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+}
+
+.controls button {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.practice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.tempo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.tempo select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+.piano-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.piano {
+  position: relative;
+  display: flex;
+  height: 230px;
+  min-width: 650px;
+  user-select: none;
+}
+
+.key {
+  cursor: pointer;
+  transition: 0.08s ease;
+}
+
+.white {
+  position: relative;
+  height: 230px;
+  flex: 1;
+
+  background: white;
+  border: 1px solid #cfd3d8;
+  border-radius: 0 0 8px 8px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  padding-bottom: 14px;
+  font-size: 12px;
+  color: #777;
+}
+
+.black {
+  position: absolute;
+  z-index: 5;
+
+  width: 8%;
+  height: 140px;
+
+  background: #17191d;
+  color: white;
+
+  border-radius: 0 0 6px 6px;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+
+  padding-bottom: 10px;
+  font-size: 9px;
+}
+
+.black[data-note="C#4"] {
+  left: 8.5%;
+}
+
+.black[data-note="D#4"] {
+  left: 20.5%;
+}
+
+.black[data-note="F#4"] {
+  left: 45%;
+}
+
+.black[data-note="G#4"] {
+  left: 57%;
+}
+
+.black[data-note="A#4"] {
+  left: 69%;
+}
+
+.key.active {
+  background: #8b5cf6 !important;
+  color: white;
+  transform: translateY(3px);
+  box-shadow: 0 0 20px rgba(139,92,246,0.5);
+}
+
+.note-display {
+  min-height: 100px;
+}
+
+#currentNotes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.note {
+  background: #111827;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.empty-note {
+  color: #999;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #999;
+  font-size: 12px;
+}
+
+@media (max-width: 600px) {
+
+  .topbar {
+    padding: 18px 14px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .song-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .controls {
+    width: 100%;
+  }
+
+  .controls button {
+    flex: 1;
+  }
+
+}
+ 
