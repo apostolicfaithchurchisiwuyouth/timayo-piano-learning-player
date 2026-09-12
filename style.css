@@ -4,78 +4,131 @@
   padding: 0;
 }
 
+:root {
+  --bg: #f3f4f6;
+  --card: #ffffff;
+  --text: #15171b;
+  --muted: #777b85;
+  --border: #e4e5e8;
+  --purple: #7357ff;
+}
+
 body {
   font-family: Arial, sans-serif;
-  background: #f5f6f8;
-  color: #111827;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
 }
 
+.app {
+  min-height: 100vh;
+}
+
+/* -------------------------
+   ROTATE SCREEN
+------------------------- */
+
+.rotate-screen {
+  display: none;
+}
+
+
+/* -------------------------
+   HEADER
+------------------------- */
+
 .topbar {
-  padding: 24px 18px;
-  background: #111827;
+  background: #111318;
   color: white;
 
+  padding: 20px 28px;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
 }
 
 .eyebrow,
 .label {
   font-size: 10px;
-  letter-spacing: 1.5px;
   font-weight: 700;
-  opacity: 0.65;
+  letter-spacing: 1.5px;
+  opacity: 0.6;
 }
 
 h1 {
   font-size: 24px;
-  margin-top: 5px;
+  margin-top: 4px;
 }
 
-.play-button {
-  border: none;
-  background: white;
-  color: #111827;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: 700;
+.top-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#status {
+  font-size: 13px;
+  color: #b9bcc4;
+}
+
+button {
+  font-family: inherit;
   cursor: pointer;
 }
 
+.primary-button {
+  border: none;
+  background: white;
+  color: #111318;
+
+  padding: 11px 18px;
+
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+
+/* -------------------------
+   MAIN
+------------------------- */
+
 main {
-  max-width: 900px;
+  max-width: 1400px;
   margin: auto;
-  padding: 20px 16px 40px;
+  padding: 24px;
 }
 
 .song-card,
 .practice-card,
 .note-display {
-  background: white;
+  background: var(--card);
   border-radius: 20px;
-  padding: 20px;
-  margin-bottom: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+  border: 1px solid var(--border);
 }
 
 .song-card {
+  padding: 22px;
+
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 15px;
+  justify-content: space-between;
+
+  gap: 20px;
+  margin-bottom: 18px;
 }
 
 .song-card h2,
 .practice-card h2 {
-  margin-top: 6px;
-  font-size: 20px;
+  margin-top: 5px;
+  font-size: 21px;
 }
 
-#status {
-  margin-top: 6px;
-  color: #6b7280;
+.song-info p {
+  margin-top: 7px;
+  color: var(--muted);
   font-size: 14px;
 }
 
@@ -85,169 +138,320 @@ main {
 }
 
 .controls button {
-  border: 1px solid #ddd;
   background: white;
-  padding: 10px 12px;
+  border: 1px solid var(--border);
+
+  padding: 11px 15px;
   border-radius: 10px;
-  cursor: pointer;
+}
+
+
+/* -------------------------
+   PRACTICE CARD
+------------------------- */
+
+.practice-card {
+  padding: 22px;
 }
 
 .practice-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  justify-content: space-between;
+
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.practice-settings {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mode-selector {
+  display: flex;
+  background: #f1f2f5;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.mode-button {
+  border: none;
+  background: transparent;
+
+  padding: 8px 13px;
+  border-radius: 7px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mode-button.active {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .tempo {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: #6b7280;
+
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .tempo select {
+  border: 1px solid var(--border);
+  background: white;
+
   padding: 8px;
   border-radius: 8px;
-  border: 1px solid #ddd;
 }
 
-.piano-wrapper {
+
+/* -------------------------
+   PIANO
+------------------------- */
+
+.piano-container {
   width: 100%;
-  overflow-x: auto;
-  padding-bottom: 10px;
+  overflow: hidden;
 }
 
 .piano {
   position: relative;
+
+  width: 100%;
+  height: min(42vw, 380px);
+  min-height: 220px;
+
   display: flex;
-  height: 230px;
-  min-width: 650px;
+
   user-select: none;
+  touch-action: manipulation;
 }
 
-.key {
-  cursor: pointer;
-  transition: 0.08s ease;
-}
 
-.white {
+/* WHITE KEYS */
+
+.key.white {
   position: relative;
-  height: 230px;
-  flex: 1;
 
-  background: white;
-  border: 1px solid #cfd3d8;
+  flex: 1;
+  height: 100%;
+
+  background: linear-gradient(
+    to bottom,
+    #ffffff,
+    #f1f1f1
+  );
+
+  border: 1px solid #cfd1d5;
+
   border-radius: 0 0 8px 8px;
 
   display: flex;
-  justify-content: center;
   align-items: flex-end;
+  justify-content: center;
 
   padding-bottom: 14px;
-  font-size: 12px;
-  color: #777;
+
+  color: #8a8d94;
+  font-size: 11px;
+
+  transition:
+    background 0.08s ease,
+    transform 0.08s ease;
 }
 
-.black {
+
+/* BLACK KEYS */
+
+.key.black {
   position: absolute;
-  z-index: 5;
+  z-index: 10;
 
-  width: 8%;
-  height: 140px;
+  width: 3.4%;
+  height: 62%;
 
-  background: #17191d;
-  color: white;
+  background:
+    linear-gradient(
+      to bottom,
+      #2b2d33,
+      #07080a
+    );
 
-  border-radius: 0 0 6px 6px;
+  border-radius: 0 0 7px 7px;
 
   display: flex;
-  justify-content: center;
   align-items: flex-end;
+  justify-content: center;
 
   padding-bottom: 10px;
-  font-size: 9px;
+
+  color: #b9bbc1;
+  font-size: 8px;
+
+  box-shadow:
+    0 5px 8px rgba(0,0,0,0.25);
+
+  transition:
+    background 0.08s ease,
+    transform 0.08s ease;
 }
 
-.black[data-note="C#4"] {
-  left: 8.5%;
-}
 
-.black[data-note="D#4"] {
-  left: 20.5%;
-}
+/* RIGHT HAND */
 
-.black[data-note="F#4"] {
-  left: 45%;
-}
-
-.black[data-note="G#4"] {
-  left: 57%;
-}
-
-.black[data-note="A#4"] {
-  left: 69%;
-}
-
-.key.active {
-  background: #8b5cf6 !important;
+.key.active.right-hand {
+  background: #7357ff !important;
   color: white;
+
   transform: translateY(3px);
-  box-shadow: 0 0 20px rgba(139,92,246,0.5);
+
+  box-shadow:
+    0 0 22px rgba(115,87,255,0.45);
 }
+
+
+/* LEFT HAND */
+
+.key.active.left-hand {
+  background: #1c9f82 !important;
+  color: white;
+
+  transform: translateY(3px);
+
+  box-shadow:
+    0 0 22px rgba(28,159,130,0.4);
+}
+
+
+/* -------------------------
+   NOTE DISPLAY
+------------------------- */
 
 .note-display {
-  min-height: 100px;
+  margin-top: 18px;
+  padding: 20px;
 }
 
 #currentNotes {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
+
+  margin-top: 12px;
 }
 
 .note {
-  background: #111827;
+  background: #17191f;
   color: white;
+
   padding: 8px 12px;
   border-radius: 8px;
+
+  font-size: 13px;
   font-weight: 700;
 }
 
 .empty-note {
-  color: #999;
+  color: #aaa;
 }
 
 footer {
   text-align: center;
-  padding: 25px;
+
+  padding: 28px;
   color: #999;
+
   font-size: 12px;
 }
 
-@media (max-width: 600px) {
+
+/* -------------------------
+   MOBILE
+------------------------- */
+
+@media (max-width: 700px) {
 
   .topbar {
-    padding: 18px 14px;
+    padding: 14px 18px;
   }
 
-  h1 {
-    font-size: 20px;
+  main {
+    padding: 14px;
   }
 
   .song-card {
+    padding: 16px;
+  }
+
+  .practice-card {
+    padding: 16px;
+  }
+
+  .practice-header {
     align-items: flex-start;
     flex-direction: column;
   }
 
-  .controls {
+  .practice-settings {
     width: 100%;
+    justify-content: space-between;
   }
 
-  .controls button {
-    flex: 1;
+  .piano {
+    min-height: 250px;
+    height: 65vw;
+  }
+
+}
+
+
+/* -------------------------
+   PORTRAIT PHONE NOTICE
+------------------------- */
+
+@media (max-width: 700px) and (orientation: portrait) {
+
+  .app {
+    display: none;
+  }
+
+  .rotate-screen {
+    display: flex;
+
+    position: fixed;
+    inset: 0;
+
+    background: #111318;
+    color: white;
+
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    padding: 30px;
+  }
+
+  .rotate-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+  }
+
+  .rotate-screen h2 {
+    font-size: 24px;
+  }
+
+  .rotate-screen p {
+    max-width: 280px;
+    margin-top: 10px;
+
+    color: #aeb2bb;
+    line-height: 1.5;
   }
 
 }
