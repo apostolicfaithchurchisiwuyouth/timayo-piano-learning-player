@@ -1,12 +1,8 @@
-// ==========================================
-// PIANO LEARNING PLAYER
-// 3 OCTAVE VERSION
-// ==========================================
+/* ==========================================
+   PIANO LAB
+   Piano Engine
+========================================== */
 
-
-// ------------------------------------------
-// DOM ELEMENTS
-// ------------------------------------------
 
 const piano = document.getElementById("piano");
 
@@ -20,9 +16,9 @@ const speedSelect =
   document.getElementById("speedSelect");
 
 
-// ------------------------------------------
-// CREATE THE PIANO
-// ------------------------------------------
+/* ==========================================
+   PIANO NOTES
+========================================== */
 
 const noteNames = [
   "C",
@@ -39,6 +35,7 @@ const noteNames = [
   "B"
 ];
 
+
 const whiteNotes = [
   "C",
   "D",
@@ -49,6 +46,7 @@ const whiteNotes = [
   "B"
 ];
 
+
 const blackNotes = [
   "C#",
   "D#",
@@ -58,10 +56,13 @@ const blackNotes = [
 ];
 
 
-// Our piano range:
-// C3 → C6
+/* ==========================================
+   CREATE 3 OCTAVES
+   C3 → C6
+========================================== */
 
 const pianoNotes = [];
+
 
 for (let octave = 3; octave <= 5; octave++) {
 
@@ -75,11 +76,13 @@ for (let octave = 3; octave <= 5; octave++) {
 
 }
 
-// Add final C6
+
 pianoNotes.push("C6");
 
 
-// Create white keys first
+/* ==========================================
+   WHITE KEYS
+========================================== */
 
 const whiteKeyNotes =
   pianoNotes.filter(note => {
@@ -97,8 +100,7 @@ whiteKeyNotes.forEach(note => {
   const key =
     document.createElement("div");
 
-  key.className =
-    "key white";
+  key.className = "key white";
 
   key.dataset.note = note;
 
@@ -109,100 +111,86 @@ whiteKeyNotes.forEach(note => {
 });
 
 
-// ------------------------------------------
-// CREATE BLACK KEYS
-// ------------------------------------------
+/* ==========================================
+   BLACK KEYS
+========================================== */
 
-function createBlackKeys() {
+const blackPositions = {
 
-  const totalWhiteKeys =
-    whiteKeyNotes.length;
+  "C#": 1,
+  "D#": 2,
+  "F#": 4,
+  "G#": 5,
+  "A#": 6
 
-  pianoNotes.forEach(note => {
-
-    const name =
-      note.replace(/[0-9]/g, "");
-
-    if (!blackNotes.includes(name)) {
-      return;
-    }
+};
 
 
-    const octave =
-      Number(
-        note.match(/[0-9]/)[0]
-      );
+pianoNotes.forEach(note => {
+
+  const name =
+    note.replace(/[0-9]/g, "");
 
 
-    // Position of the black key
-    // within each octave
-
-    const blackPositions = {
-      "C#": 1,
-      "D#": 2,
-      "F#": 4,
-      "G#": 5,
-      "A#": 6
-    };
+  if (!blackNotes.includes(name)) {
+    return;
+  }
 
 
-    const positionInOctave =
-      blackPositions[name];
+  const octave =
+    Number(note.match(/[0-9]/)[0]);
 
 
-    const octaveOffset =
-      (octave - 3) * 7;
+  const octaveOffset =
+    (octave - 3) * 7;
 
 
-    const whiteKeyPosition =
-      octaveOffset +
-      positionInOctave;
+  const whitePosition =
+    octaveOffset +
+    blackPositions[name];
 
 
-    const left =
-      (whiteKeyPosition /
-        totalWhiteKeys) * 100;
+  const position =
+    whitePosition /
+    whiteKeyNotes.length *
+    100;
 
 
-    const key =
-      document.createElement("div");
-
-    key.className =
-      "key black";
-
-    key.dataset.note =
-      note;
-
-    key.textContent =
-      note;
+  const key =
+    document.createElement("div");
 
 
-    key.style.left =
-      `${left - 1.7}%`;
+  key.className = "key black";
+
+  key.dataset.note = note;
+
+  key.textContent = note;
 
 
-    piano.appendChild(key);
-
-  });
-
-}
-
-createBlackKeys();
+  key.style.left =
+    `${position - 2}%`;
 
 
-// ------------------------------------------
-// REAL PIANO SAMPLER
-// ------------------------------------------
+  piano.appendChild(key);
+
+});
+
+
+/* ==========================================
+   PIANO SAMPLE ENGINE
+========================================== */
 
 const pianoSampler =
   new Tone.Sampler({
 
     urls: {
+
       A1: "A1.mp3",
       A2: "A2.mp3",
       A3: "A3.mp3",
       A4: "A4.mp3",
       A5: "A5.mp3"
+
     },
 
     release: 1,
@@ -213,15 +201,17 @@ const pianoSampler =
   }).toDestination();
 
 
-// ------------------------------------------
-// AUDIO START
-// ------------------------------------------
+/* ==========================================
+   START AUDIO
+========================================== */
 
 async function startAudio() {
 
   await Tone.start();
 
-  if (Tone.context.state !== "running") {
+  if (
+    Tone.context.state !== "running"
+  ) {
 
     await Tone.context.resume();
 
@@ -230,9 +220,9 @@ async function startAudio() {
 }
 
 
-// ------------------------------------------
-// GET PIANO KEY
-// ------------------------------------------
+/* ==========================================
+   GET KEY
+========================================== */
 
 function getKey(note) {
 
@@ -243,18 +233,21 @@ function getKey(note) {
 }
 
 
-// ------------------------------------------
-// SHOW NOTES
-// ------------------------------------------
+/* ==========================================
+   SHOW CURRENT NOTES
+========================================== */
 
 function showNotes(notes) {
 
   currentNotes.innerHTML = "";
 
+
   if (!notes.length) {
 
     currentNotes.innerHTML =
-      `<span class="empty-note">—</span>`;
+      `<span class="empty-note">
+        Ready when you are
+      </span>`;
 
     return;
 
@@ -263,25 +256,58 @@ function showNotes(notes) {
 
   notes.forEach(note => {
 
-    const item =
+    const element =
       document.createElement("span");
 
-    item.className =
-      "note";
+    element.className = "note";
 
-    item.textContent =
-      note;
+    element.textContent = note;
 
-    currentNotes.appendChild(item);
+    currentNotes.appendChild(element);
 
   });
 
 }
 
 
-// ------------------------------------------
-// PLAY NOTES
-// ------------------------------------------
+/* ==========================================
+   HIGHLIGHT KEY
+========================================== */
+
+function highlightKey(
+  note,
+  duration,
+  hand = "right"
+) {
+
+  const key =
+    getKey(note);
+
+  if (!key) return;
+
+
+  key.classList.add(
+    "active",
+    `${hand}-hand`
+  );
+
+
+  setTimeout(() => {
+
+    key.classList.remove(
+      "active",
+      "right-hand",
+      "left-hand"
+    );
+
+  }, duration * 1000);
+
+}
+
+
+/* ==========================================
+   PLAY NOTES
+========================================== */
 
 function playNotes(
   notes,
@@ -289,7 +315,10 @@ function playNotes(
   hand = "right"
 ) {
 
-  if (!notes || !notes.length) {
+  if (
+    !notes ||
+    !notes.length
+  ) {
     return;
   }
 
@@ -300,48 +329,33 @@ function playNotes(
   );
 
 
-  showNotes(notes);
-
-
   notes.forEach(note => {
 
-    const key =
-      getKey(note);
-
-    if (!key) return;
-
-
-    key.classList.add(
-      "active",
-      `${hand}-hand`
+    highlightKey(
+      note,
+      duration,
+      hand
     );
 
-
-    setTimeout(() => {
-
-      key.classList.remove(
-        "active",
-        "right-hand",
-        "left-hand"
-      );
-
-    }, duration * 1000);
-
   });
+
+
+  showNotes(notes);
 
 }
 
 
-// ------------------------------------------
-// TOUCH / CLICK PLAYING
-// ------------------------------------------
+/* ==========================================
+   PLAY A KEY MANUALLY
+========================================== */
 
-document.addEventListener(
+piano.addEventListener(
   "pointerdown",
   async event => {
 
     const key =
       event.target.closest(".key");
+
 
     if (!key) return;
 
@@ -363,12 +377,9 @@ document.addEventListener(
 );
 
 
-// ------------------------------------------
-// TEST SONG DATA
-// ------------------------------------------
-
-// Later, this will be replaced
-// with your learning arrangement.
+/* ==========================================
+   TEST MUSIC DATA
+========================================== */
 
 const testSong = [
 
@@ -379,29 +390,29 @@ const testSong = [
   },
 
   {
-    left: ["A2"],
-    right: ["A3", "C4", "E4"],
+    left: ["A3"],
+    right: ["A4", "C5", "E5"],
     duration: 1
   },
 
   {
     left: ["F3"],
-    right: ["A3", "C4", "F4"],
+    right: ["A4", "C5", "F5"],
     duration: 1
   },
 
   {
     left: ["G3"],
-    right: ["B3", "D4", "G4"],
+    right: ["B4", "D5", "G5"],
     duration: 1
   }
 
 ];
 
 
-// ------------------------------------------
-// PLAYBACK VARIABLES
-// ------------------------------------------
+/* ==========================================
+   PLAYBACK STATE
+========================================== */
 
 let currentStep = 0;
 
@@ -412,9 +423,9 @@ let timer = null;
 let practiceMode = "both";
 
 
-// ------------------------------------------
-// PLAY SONG
-// ------------------------------------------
+/* ==========================================
+   PLAY SONG
+========================================== */
 
 async function playSong() {
 
@@ -427,7 +438,7 @@ async function playSong() {
   playing = true;
 
   statusText.textContent =
-    "Playing...";
+    "Playing";
 
 
   playNextStep();
@@ -435,16 +446,19 @@ async function playSong() {
 }
 
 
-// ------------------------------------------
-// PLAY NEXT STEP
-// ------------------------------------------
+/* ==========================================
+   NEXT STEP
+========================================== */
 
 function playNextStep() {
 
   if (!playing) return;
 
 
-  if (currentStep >= testSong.length) {
+  if (
+    currentStep >=
+    testSong.length
+  ) {
 
     playing = false;
 
@@ -463,11 +477,14 @@ function playNextStep() {
 
 
   const speed =
-    Number(speedSelect.value);
+    Number(
+      speedSelect.value
+    );
 
 
   const duration =
-    step.duration / speed;
+    step.duration /
+    speed;
 
 
   if (
@@ -525,9 +542,9 @@ function playNextStep() {
 }
 
 
-// ------------------------------------------
-// PAUSE
-// ------------------------------------------
+/* ==========================================
+   PAUSE
+========================================== */
 
 function pauseSong() {
 
@@ -543,9 +560,9 @@ function pauseSong() {
 }
 
 
-// ------------------------------------------
-// RESTART
-// ------------------------------------------
+/* ==========================================
+   RESTART
+========================================== */
 
 function restartSong() {
 
@@ -557,19 +574,17 @@ function restartSong() {
 
   currentStep = 0;
 
-
   statusText.textContent =
     "Ready";
-
 
   showNotes([]);
 
 }
 
 
-// ------------------------------------------
-// BUTTONS
-// ------------------------------------------
+/* ==========================================
+   PLAY BUTTON
+========================================== */
 
 document
   .getElementById("playButton")
@@ -579,6 +594,10 @@ document
   );
 
 
+/* ==========================================
+   PAUSE BUTTON
+========================================== */
+
 document
   .getElementById("pauseButton")
   .addEventListener(
@@ -586,6 +605,10 @@ document
     pauseSong
   );
 
+
+/* ==========================================
+   RESTART BUTTON
+========================================== */
 
 document
   .getElementById("restartButton")
@@ -595,12 +618,12 @@ document
   );
 
 
-// ------------------------------------------
-// PRACTICE MODE
-// ------------------------------------------
+/* ==========================================
+   HAND SELECTION
+========================================== */
 
 document
-  .querySelectorAll(".mode-button")
+  .querySelectorAll(".hand-button")
   .forEach(button => {
 
     button.addEventListener(
@@ -613,11 +636,11 @@ document
 
         document
           .querySelectorAll(
-            ".mode-button"
+            ".hand-button"
           )
-          .forEach(btn => {
+          .forEach(item => {
 
-            btn.classList.remove(
+            item.classList.remove(
               "active"
             );
 
@@ -628,30 +651,16 @@ document
           "active"
         );
 
-
-        const titles = {
-          both: "Both Hands",
-          right: "Right Hand",
-          left: "Left Hand"
-        };
-
-
-        document.getElementById(
-          "modeTitle"
-        ).textContent =
-          titles[practiceMode];
-
       }
     );
 
   });
 
 
-// ------------------------------------------
-// READY
-// ------------------------------------------
+/* ==========================================
+   READY
+========================================== */
 
 console.log(
-  "3 Octave Piano Learning Player loaded."
+  "Piano Lab loaded successfully."
 );
- 
