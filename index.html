@@ -8,9 +8,9 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <title>Piano Learning Player</title>
+  <title>Piano Lab</title>
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -28,12 +28,9 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
 
-  <!-- ==============================
-       MOBILE ROTATION SCREEN
-  =============================== -->
+  <!-- MOBILE ROTATION SCREEN -->
 
   <div class="rotate-screen">
 
@@ -44,32 +41,29 @@
     <h2>Turn your phone sideways</h2>
 
     <p>
-      Landscape mode gives you the best piano experience.
+      Landscape mode gives you more room to play the piano.
     </p>
 
   </div>
 
 
-  <!-- ==============================
-       APPLICATION
-  =============================== -->
+  <!-- APPLICATION -->
 
   <div class="app">
 
 
-    <!-- ==============================
-         TOP NAVIGATION
-    =============================== -->
+    <!-- TOP BAR -->
 
     <header class="topbar">
 
       <div class="brand">
 
         <div class="brand-mark">
-          <i class="ri-music-2-fill"></i>
+          <i class="ri-piano-fill"></i>
         </div>
 
-        <div>
+        <div class="brand-copy">
+
           <span class="brand-label">
             PIANO LAB
           </span>
@@ -77,65 +71,57 @@
           <h1>
             Learn & Play
           </h1>
+
         </div>
 
       </div>
 
 
-      <div class="top-actions">
-
-        <button
-          class="icon-button"
-          aria-label="Settings"
-        >
-          <i class="ri-settings-3-line"></i>
-        </button>
-
-      </div>
+      <button
+        class="icon-button"
+        id="settingsButton"
+        aria-label="Settings"
+      >
+        <i class="ri-settings-3-line"></i>
+      </button>
 
     </header>
 
 
 
-    <!-- ==============================
-         MAIN CONTENT
-    =============================== -->
+    <!-- MAIN -->
 
     <main class="main-content">
 
 
-      <!-- SONG HEADER -->
+      <!-- CURRENT PIECE -->
 
-      <section class="lesson-header">
+      <section class="piece-header">
 
-        <div class="lesson-heading">
+        <div>
 
           <span class="section-label">
-            CURRENT LESSON
+            CURRENT PIECE
           </span>
 
-          <h2>
-            My First Piano Piece
+          <h2 id="pieceTitle">
+            Gentle Beginning
           </h2>
 
-          <p>
-            Practice each hand separately, then bring them together.
+          <p id="pieceSubtitle">
+            Beginner Piano Study
           </p>
 
         </div>
 
 
-        <div class="lesson-meta">
+        <div class="piece-badge">
 
-          <div class="meta-item">
-            <i class="ri-time-line"></i>
-            <span>Beginner</span>
-          </div>
+          <i class="ri-music-2-line"></i>
 
-          <div class="meta-item">
-            <i class="ri-music-2-line"></i>
-            <span>Both Hands</span>
-          </div>
+          <span>
+            Piano Study
+          </span>
 
         </div>
 
@@ -143,90 +129,11 @@
 
 
 
-      <!-- ==============================
-           PRACTICE CONTROLS
-      =============================== -->
-
-      <section class="practice-toolbar">
-
-
-        <div class="hand-selector">
-
-          <button
-            class="hand-button active"
-            data-mode="both"
-          >
-            <i class="ri-hand-heart-line"></i>
-            <span>Both Hands</span>
-          </button>
-
-
-          <button
-            class="hand-button"
-            data-mode="right"
-          >
-            <i class="ri-hand-heart-line"></i>
-            <span>Right Hand</span>
-          </button>
-
-
-          <button
-            class="hand-button"
-            data-mode="left"
-          >
-            <i class="ri-hand-heart-line"></i>
-            <span>Left Hand</span>
-          </button>
-
-        </div>
-
-
-
-        <div class="toolbar-right">
-
-          <div class="speed-control">
-
-            <i class="ri-speed-line"></i>
-
-            <span>
-              Speed
-            </span>
-
-            <select id="speedSelect">
-
-              <option value="0.5">
-                50%
-              </option>
-
-              <option value="0.75">
-                75%
-              </option>
-
-              <option value="1" selected>
-                100%
-              </option>
-
-              <option value="1.25">
-                125%
-              </option>
-
-            </select>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-
-      <!-- ==============================
-           NOTE INDICATOR
-      =============================== -->
+      <!-- CURRENT NOTES -->
 
       <section class="now-playing">
 
-        <div class="now-playing-label">
+        <div class="now-playing-left">
 
           <span class="live-dot"></span>
 
@@ -255,36 +162,193 @@
 
 
 
-    <!-- ==============================
-         STICKY PIANO AREA
-    =============================== -->
+    <!-- STICKY PIANO -->
 
     <section class="piano-dock">
 
 
-      <div class="piano-topbar">
+      <!-- PIANO INFORMATION -->
 
-        <div class="piano-title">
+      <div class="piano-info">
+
+        <div class="piano-name">
 
           <i class="ri-piano-line"></i>
 
-          <span>
-            Piano
-          </span>
+          <div>
 
-          <small>
-            C3 — C6
-          </small>
+            <strong>
+              Piano Lab
+            </strong>
+
+            <span>
+              Digital Learning Piano
+            </span>
+
+          </div>
 
         </div>
 
 
-        <div
-          id="status"
-          class="play-status"
-        >
-          Ready
+        <div class="range-label">
+          C2 — C5
         </div>
+
+      </div>
+
+
+
+      <!-- QUICK CONTROLS -->
+
+      <div class="quick-controls">
+
+
+        <!-- PIECE -->
+
+        <div class="control-wrapper">
+
+          <button
+            class="quick-control"
+            id="pieceControl"
+            aria-label="Select piece"
+          >
+
+            <i class="ri-music-2-line"></i>
+
+            <span>
+              Piece
+            </span>
+
+            <i class="ri-arrow-down-s-line"></i>
+
+          </button>
+
+
+          <div
+            class="control-menu"
+            id="pieceMenu"
+          >
+
+            <button data-piece="gentle">
+              <span>
+                Gentle Beginning
+              </span>
+
+              <small>
+                Beginner
+              </small>
+            </button>
+
+
+            <button data-piece="allofme">
+              <span>
+                All of Me
+              </span>
+
+              <small>
+                Practice piece
+              </small>
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- HAND -->
+
+        <div class="control-wrapper">
+
+          <button
+            class="quick-control"
+            id="handControl"
+            aria-label="Select hand"
+          >
+
+            <i class="ri-hand-heart-line"></i>
+
+            <span>
+              Both
+            </span>
+
+            <i class="ri-arrow-down-s-line"></i>
+
+          </button>
+
+
+          <div
+            class="control-menu"
+            id="handMenu"
+          >
+
+            <button data-hand="both">
+              <i class="ri-hand-heart-line"></i>
+              <span>Both Hands</span>
+            </button>
+
+            <button data-hand="right">
+              <i class="ri-hand-heart-line"></i>
+              <span>Right Hand</span>
+            </button>
+
+            <button data-hand="left">
+              <i class="ri-hand-heart-line"></i>
+              <span>Left Hand</span>
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <!-- SPEED -->
+
+        <div class="control-wrapper">
+
+          <button
+            class="quick-control"
+            id="speedControl"
+            aria-label="Change speed"
+          >
+
+            <i class="ri-speed-line"></i>
+
+            <span id="speedLabel">
+              100%
+            </span>
+
+            <i class="ri-arrow-down-s-line"></i>
+
+          </button>
+
+
+          <div
+            class="control-menu speed-menu"
+            id="speedMenu"
+          >
+
+            <button data-speed="0.5">
+              50%
+            </button>
+
+            <button data-speed="0.75">
+              75%
+            </button>
+
+            <button data-speed="1">
+              100%
+            </button>
+
+            <button data-speed="1.25">
+              125%
+            </button>
+
+          </div>
+
+        </div>
+
 
       </div>
 
@@ -303,9 +367,7 @@
 
 
 
-      <!-- ==============================
-           STICKY PLAYBACK CONTROLS
-      =============================== -->
+      <!-- PLAYBACK -->
 
       <div class="playback-bar">
 
@@ -313,10 +375,10 @@
         <button
           id="restartButton"
           class="playback-icon"
-          aria-label="Restart"
+          aria-label="Replay"
         >
 
-          <i class="ri-restart-line"></i>
+          <i class="ri-replay-10-line"></i>
 
         </button>
 
@@ -327,23 +389,23 @@
           aria-label="Play"
         >
 
-          <i class="ri-play-fill"></i>
+          <i
+            id="playIcon"
+            class="ri-play-fill"
+          ></i>
 
         </button>
 
 
-        <button
-          id="pauseButton"
-          class="playback-icon"
-          aria-label="Pause"
+        <div
+          id="status"
+          class="play-status"
         >
-
-          <i class="ri-pause-line"></i>
-
-        </button>
-
+          Ready
+        </div>
 
       </div>
+
 
     </section>
 
@@ -358,7 +420,7 @@
       </span>
 
       <span>
-        Version 1
+        Digital Piano Learning System
       </span>
 
     </footer>
@@ -374,3 +436,4 @@
 
 </body>
 </html>
+ 
