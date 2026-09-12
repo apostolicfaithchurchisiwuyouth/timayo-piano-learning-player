@@ -1,51 +1,74 @@
-/* ==========================================
+/* =========================================================
    PIANO LAB
-   VERSION 2
-   Piano Engine
-========================================== */
+   Main piano + playback controller
+========================================================= */
 
 
-/* ==========================================
-   ELEMENTS
-========================================== */
+/* =========================================================
+   DOM
+========================================================= */
 
-const piano =
-  document.getElementById("piano");
+const pianoElement = document.getElementById("piano");
 
-const statusText =
-  document.getElementById("status");
+const pieceSelect = document.getElementById("pieceSelect");
+const handSelect = document.getElementById("handSelect");
+const speedSelect = document.getElementById("speedSelect");
 
-const currentNotes =
-  document.getElementById("currentNotes");
+const replayButton = document.getElementById("replayButton");
+const playButton = document.getElementById("playButton");
 
-const playButton =
-  document.getElementById("playButton");
+const playIcon = document.getElementById("playIcon");
 
-const playIcon =
-  document.getElementById("playIcon");
+const playbackStatus = document.getElementById("playbackStatus");
+const playbackSubstatus = document.getElementById("playbackSubstatus");
 
-const restartButton =
-  document.getElementById("restartButton");
+const lessonStatus = document.getElementById("lessonStatus");
+const lessonModeTitle = document.getElementById("lessonModeTitle");
 
-const pieceTitle =
-  document.getElementById("pieceTitle");
+const speedDisplay = document.getElementById("speedDisplay");
 
-const pieceSubtitle =
-  document.getElementById("pieceSubtitle");
+const mainPieceTitle = document.getElementById("mainPieceTitle");
+const mainPieceDescription = document.getElementById("mainPieceDescription");
 
-const handControl =
-  document.getElementById("handControl");
+const pianoPieceName = document.getElementById("pianoPieceName");
 
-const speedLabel =
-  document.getElementById("speedLabel");
+const notePreview = document.getElementById("notePreview");
 
 
-/* ==========================================
-   PIANO NOTES
-========================================== */
+/* =========================================================
+   PIANO SETTINGS
+========================================================= */
+
+const START_OCTAVE = 2;
+const END_OCTAVE = 5;
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let selectedSong = "gentle";
+
+let practiceMode = "both";
+
+let playbackSpeed = 1;
+
+let currentStep = 0;
+
+let playing = false;
+
+let playbackTimer = null;
+
+let audioReady = false;
+
+const highlightTimers = new Set();
+
+
+/* =========================================================
+   NOTE DATA
+========================================================= */
 
 const noteNames = [
-
   "C",
   "C#",
   "D",
@@ -58,368 +81,46 @@ const noteNames = [
   "A",
   "A#",
   "B"
-
 ];
 
 
-const whiteNotes = [
+function buildNoteList() {
 
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "A",
-  "B"
+  const notes = [];
 
-];
+  for (let octave = START_OCTAVE; octave <= END_OCTAVE; octave++) {
 
+    for (const note of noteNames) {
 
-const blackNotes = [
+      if (octave === END_OCTAVE && note !== "C") {
+        continue;
+      }
 
-  "C#",
-  "D#",
-  "F#",
-  "G#",
-  "A#"
-
-];
-
-
-/* ==========================================
-   CREATE C2 → C5
-========================================== */
-
-const pianoNotes = [];
-
-
-for (
-  let octave = 2;
-  octave <= 4;
-  octave++
-) {
-
-  noteNames.forEach(note => {
-
-    pianoNotes.push(
-      `${note}${octave}`
-    );
-
-  });
-
-}
-
-
-pianoNotes.push("C5");
-
-
-/* ==========================================
-   WHITE NOTES
-========================================== */
-
-const whiteKeyNotes =
-  pianoNotes.filter(note => {
-
-    const name =
-      note.replace(/[0-9]/g, "");
-
-    return whiteNotes.includes(name);
-
-  });
-
-
-/* ==========================================
-   CREATE WHITE KEYS
-========================================== */
-
-whiteKeyNotes.forEach(note => {
-
-  const key =
-    document.createElement("div");
-
-  key.className =
-    "key white";
-
-  key.dataset.note =
-    note;
-
-  key.textContent =
-    note;
-
-  piano.appendChild(key);
-
-});
-
-
-/* ==========================================
-   BLACK KEY POSITIONS
-========================================== */
-
-const blackPositions = {
-
-  "C#": 1,
-  "D#": 2,
-  "F#": 4,
-  "G#": 5,
-  "A#": 6
-
-};
-
-
-/* ==========================================
-   CREATE BLACK KEYS
-========================================== */
-
-pianoNotes.forEach(note => {
-
-  const name =
-    note.replace(/[0-9]/g, "");
-
-  if (
-    !blackNotes.includes(name)
-  ) {
-
-    return;
-
+      notes.push(`${note}${octave}`);
+    }
   }
 
-
-  const octave =
-    Number(
-      note.match(/[0-9]/)[0]
-    );
-
-
-  const octaveOffset =
-    (octave - 2) * 7;
-
-
-  const whitePosition =
-    octaveOffset +
-    blackPositions[name];
-
-
-  const percentage =
-    whitePosition /
-    whiteKeyNotes.length *
-    100;
-
-
-  const key =
-    document.createElement("div");
-
-
-  key.className =
-    "key black";
-
-  key.dataset.note =
-    note;
-
-  key.textContent =
-    note;
-
-
-  key.style.left =
-    `${percentage}%`;
-
-
-  piano.appendChild(key);
-
-});
-
-
-/* ==========================================
-   PIANO SAMPLE ENGINE
-========================================== */
-
-const pianoSampler =
-  new Tone.Sampler({
-
-    urls: {
-
-      A1: "A1.mp3",
-      A2: "A2.mp3",
-      A3: "A3.mp3",
-      A4: "A4.mp3",
-      A5: "A5.mp3"
-
-    },
-
-    release: 1,
-
-    baseUrl:
-      "https://tonejs.github.io/audio/salamander/"
-
-  }).toDestination();
-
-
-/* ==========================================
-   AUDIO START
-========================================== */
-
-async function startAudio() {
-
-  await Tone.start();
-
-  if (
-    Tone.context.state !== "running"
-  ) {
-
-    await Tone.context.resume();
-
-  }
-
+  return notes;
 }
 
 
-/* ==========================================
-   GET KEY
-========================================== */
-
-function getKey(note) {
-
-  return document.querySelector(
-    `.key[data-note="${note}"]`
-  );
-
-}
+const pianoNotes = buildNoteList();
 
 
-/* ==========================================
-   DISPLAY NOTES
-========================================== */
-
-function showNotes(notes) {
-
-  currentNotes.innerHTML = "";
-
-
-  if (
-    !notes ||
-    !notes.length
-  ) {
-
-    currentNotes.innerHTML = `
-      <span class="empty-note">
-        Ready when you are
-      </span>
-    `;
-
-    return;
-
-  }
-
-
-  notes.forEach(note => {
-
-    const element =
-      document.createElement("span");
-
-    element.className =
-      "note";
-
-    element.textContent =
-      note;
-
-    currentNotes.appendChild(
-      element
-    );
-
-  });
-
-}
-
-
-/* ==========================================
-   HIGHLIGHT
-========================================== */
-
-function highlightKey(
-  note,
-  duration,
-  hand
-) {
-
-  const key =
-    getKey(note);
-
-  if (!key) return;
-
-
-  key.classList.add(
-    "active",
-    `${hand}-hand`
-  );
-
-
-  setTimeout(() => {
-
-    key.classList.remove(
-      "active",
-      "right-hand",
-      "left-hand"
-    );
-
-  }, duration * 1000);
-
-}
-
-
-/* ==========================================
-   PLAY NOTES
-========================================== */
-
-function playNotes(
-  notes,
-  duration,
-  hand
-) {
-
-  if (
-    !notes ||
-    !notes.length
-  ) {
-
-    return;
-
-  }
-
-
-  pianoSampler.triggerAttackRelease(
-    notes,
-    duration
-  );
-
-
-  notes.forEach(note => {
-
-    highlightKey(
-      note,
-      duration,
-      hand
-    );
-
-  });
-
-}
-
-
-/* ==========================================
+/* =========================================================
    SONG DATA
-========================================== */
+========================================================= */
 
 /*
-   IMPORTANT:
+  NOTE:
 
-   "Gentle Beginning" is an original
-   beginner practice piece.
+  "Gentle Beginning" is an original practice piece.
 
-   The All of Me slot is included so the
-   system can later receive a user-provided
-   legal MIDI / note arrangement.
+  "All of Me" is intentionally NOT given a note-for-note
+  copyrighted transcription here.
 
-   We are not reproducing the copyrighted
-   song transcription here.
+  When you provide your own legally obtained arrangement,
+  MIDI or MusicXML, we can replace the All of Me data below.
 */
 
 
@@ -427,42 +128,61 @@ const songs = {
 
   gentle: {
 
-    title:
-      "Gentle Beginning",
+    title: "Gentle Beginning",
 
-    subtitle:
-      "Beginner Piano Study",
+    description:
+      "A simple beginner piece for learning basic piano movement, timing and two-hand coordination.",
+
+    tempo: 72,
 
     steps: [
 
       {
-        left: ["C2"],
-        right: ["C4", "E4", "G4"],
-        duration: 1
+        right: ["C4"],
+        left: ["C3"],
+        duration: 1.0
       },
 
       {
-        left: ["A2"],
-        right: ["A3", "C4", "E4"],
-        duration: 1
-      },
-
-      {
-        left: ["F2"],
-        right: ["A3", "C4", "F4"],
-        duration: 1
-      },
-
-      {
+        right: ["E4"],
         left: ["G2"],
-        right: ["B3", "D4", "G4"],
-        duration: 1
+        duration: 1.0
       },
 
       {
-        left: ["C2"],
-        right: ["E4", "G4", "C5"],
-        duration: 1.4
+        right: ["G4"],
+        left: ["C3"],
+        duration: 1.0
+      },
+
+      {
+        right: ["E4"],
+        left: ["G2"],
+        duration: 1.0
+      },
+
+      {
+        right: ["C4", "E4"],
+        left: ["C3"],
+        duration: 1.0
+      },
+
+      {
+        right: ["D4", "G4"],
+        left: ["G2"],
+        duration: 1.0
+      },
+
+      {
+        right: ["C4", "E4"],
+        left: ["C3"],
+        duration: 1.0
+      },
+
+      {
+        right: ["G4"],
+        left: ["G2"],
+        duration: 1.0
       }
 
     ]
@@ -472,111 +192,617 @@ const songs = {
 
   allofme: {
 
-    title:
-      "All of Me",
+    title: "All of Me",
 
-    subtitle:
-      "Practice Piece",
+    description:
+      "Your arrangement will be added here. Import your own MIDI, MusicXML or note arrangement to make this playable.",
 
-    steps: [
+    tempo: 72,
 
-      /*
-        Placeholder.
-
-        Replace these steps with your own
-        legally obtained notes/MIDI arrangement
-        when available.
-      */
-
-      {
-        left: ["C2"],
-        right: ["C4", "E4", "G4"],
-        duration: 1
-      },
-
-      {
-        left: ["A2"],
-        right: ["A3", "C4", "E4"],
-        duration: 1
-      },
-
-      {
-        left: ["F2"],
-        right: ["A3", "C4", "F4"],
-        duration: 1
-      },
-
-      {
-        left: ["G2"],
-        right: ["B3", "D4", "G4"],
-        duration: 1
-      }
-
-    ]
+    steps: []
 
   }
 
 };
 
 
-/* ==========================================
-   PLAYBACK STATE
-========================================== */
+/* =========================================================
+   TONE.JS PIANO
+========================================================= */
 
-let selectedSong =
-  "gentle";
+const sampler = new Tone.Sampler({
 
-let practiceMode =
-  "both";
+  urls: {
 
-let speed =
-  1;
+    A1: "A1.mp3",
+    A2: "A2.mp3",
+    A3: "A3.mp3",
+    A4: "A4.mp3",
+    A5: "A5.mp3"
 
-let currentStep =
-  0;
+  },
 
-let playing =
-  false;
+  release: 1.5,
 
-let paused =
-  false;
+  baseUrl:
+    "https://tonejs.github.io/audio/salamander/"
 
-let timer =
-  null;
+}).toDestination();
 
 
-/* ==========================================
-   CURRENT SONG
-========================================== */
+/* =========================================================
+   AUDIO INITIALIZATION
+========================================================= */
 
-function getSong() {
+async function ensureAudioReady() {
 
-  return songs[selectedSong];
+  if (!audioReady) {
 
-}
+    updateStatus(
+      "Loading piano",
+      "Preparing real piano samples..."
+    );
 
+    await Tone.start();
 
-/* ==========================================
-   UPDATE PIECE UI
-========================================== */
+    await Tone.loaded();
 
-function updatePieceUI() {
-
-  const song =
-    getSong();
-
-  pieceTitle.textContent =
-    song.title;
-
-  pieceSubtitle.textContent =
-    song.subtitle;
+    audioReady = true;
+  }
 
 }
 
 
-/* ==========================================
-   UPDATE PLAY ICON
-========================================== */
+/* =========================================================
+   BUILD PIANO
+========================================================= */
+
+function createPiano() {
+
+  pianoElement.innerHTML = "";
+
+  const whiteNotes = pianoNotes.filter(
+    note => !note.includes("#")
+  );
+
+  const whiteKeyElements = {};
+
+
+  /* -----------------------------------------
+     WHITE KEYS
+  ----------------------------------------- */
+
+  whiteNotes.forEach((note) => {
+
+    const key = document.createElement("div");
+
+    key.className = "white-key";
+
+    key.dataset.note = note;
+
+    key.addEventListener("pointerdown", async (event) => {
+
+      event.preventDefault();
+
+      await playManualNote(note, key);
+
+    });
+
+    pianoElement.appendChild(key);
+
+    whiteKeyElements[note] = key;
+
+  });
+
+
+  /* -----------------------------------------
+     BLACK KEYS
+  ----------------------------------------- */
+
+  const blackPositions = {
+    "C#": 1,
+    "D#": 2,
+    "F#": 4,
+    "G#": 5,
+    "A#": 6
+  };
+
+
+  pianoNotes
+    .filter(note => note.includes("#"))
+    .forEach(note => {
+
+      const noteName = note.replace(/[0-9]/g, "");
+
+      const octave =
+        parseInt(note.replace(/\D/g, ""), 10);
+
+      const previousWhiteCount =
+        whiteNotes.filter(whiteNote => {
+
+          const whiteOctave =
+            parseInt(
+              whiteNote.replace(/\D/g, ""),
+              10
+            );
+
+          return whiteOctave < octave;
+
+        }).length;
+
+      const position =
+        previousWhiteCount +
+        blackPositions[noteName];
+
+
+      const percentage =
+        (position / whiteNotes.length) * 100;
+
+
+      const key = document.createElement("div");
+
+      key.className = "black-key";
+
+      key.dataset.note = note;
+
+      key.style.left = `${percentage}%`;
+
+      key.style.transform = "translateX(-50%)";
+
+
+      key.addEventListener("pointerdown", async (event) => {
+
+        event.preventDefault();
+
+        await playManualNote(note, key);
+
+      });
+
+
+      pianoElement.appendChild(key);
+
+    });
+
+}
+
+
+/* =========================================================
+   MANUAL PIANO
+========================================================= */
+
+async function playManualNote(note, keyElement) {
+
+  try {
+
+    await ensureAudioReady();
+
+    sampler.triggerAttackRelease(
+      note,
+      "4n"
+    );
+
+    highlightKey(
+      note,
+      0.45,
+      "right"
+    );
+
+  } catch (error) {
+
+    console.error("Piano sound error:", error);
+
+    updateStatus(
+      "Audio error",
+      "Tap the piano again to retry."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   FIND PIANO KEY
+========================================================= */
+
+function getKey(note) {
+
+  return pianoElement.querySelector(
+    `[data-note="${note}"]`
+  );
+
+}
+
+
+/* =========================================================
+   CLEAR HIGHLIGHTS
+========================================================= */
+
+function clearHighlights() {
+
+  highlightTimers.forEach(timer => {
+
+    clearTimeout(timer);
+
+  });
+
+  highlightTimers.clear();
+
+
+  pianoElement
+    .querySelectorAll(".active")
+    .forEach(key => {
+
+      key.classList.remove(
+        "active",
+        "right-hand",
+        "left-hand"
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT KEY
+========================================================= */
+
+function highlightKey(
+  note,
+  duration,
+  hand = "right"
+) {
+
+  const key = getKey(note);
+
+  if (!key) return;
+
+
+  key.classList.add("active");
+
+  key.classList.add(
+    hand === "left"
+      ? "left-hand"
+      : "right-hand"
+  );
+
+
+  const timer = setTimeout(() => {
+
+    key.classList.remove("active");
+
+    key.classList.remove(
+      "right-hand",
+      "left-hand"
+    );
+
+    highlightTimers.delete(timer);
+
+  }, duration * 1000);
+
+
+  highlightTimers.add(timer);
+
+}
+
+
+/* =========================================================
+   PLAY CURRENT STEP
+========================================================= */
+
+async function playCurrentStep() {
+
+  const song = songs[selectedSong];
+
+  if (!song || song.steps.length === 0) {
+
+    updateStatus(
+      "Arrangement needed",
+      "Add your All of Me arrangement first."
+    );
+
+    playing = false;
+
+    updatePlayButton();
+
+    return;
+
+  }
+
+
+  if (currentStep >= song.steps.length) {
+
+    finishPlayback();
+
+    return;
+
+  }
+
+
+  const step = song.steps[currentStep];
+
+  const duration =
+    step.duration / playbackSpeed;
+
+
+  const notesToPlay = [];
+
+  const rightNotes = [];
+  const leftNotes = [];
+
+
+  /* -----------------------------------------
+     SELECT HAND
+  ----------------------------------------- */
+
+  if (
+    practiceMode === "both" ||
+    practiceMode === "right"
+  ) {
+
+    step.right.forEach(note => {
+
+      rightNotes.push(note);
+
+      notesToPlay.push(note);
+
+    });
+
+  }
+
+
+  if (
+    practiceMode === "both" ||
+    practiceMode === "left"
+  ) {
+
+    step.left.forEach(note => {
+
+      leftNotes.push(note);
+
+      notesToPlay.push(note);
+
+    });
+
+  }
+
+
+  /* -----------------------------------------
+     PLAY NOTES
+  ----------------------------------------- */
+
+  if (notesToPlay.length > 0) {
+
+    sampler.triggerAttackRelease(
+      notesToPlay,
+      duration
+    );
+
+  }
+
+
+  /* -----------------------------------------
+     HIGHLIGHT RIGHT HAND
+  ----------------------------------------- */
+
+  rightNotes.forEach(note => {
+
+    highlightKey(
+      note,
+      duration,
+      "right"
+    );
+
+  });
+
+
+  /* -----------------------------------------
+     HIGHLIGHT LEFT HAND
+  ----------------------------------------- */
+
+  leftNotes.forEach(note => {
+
+    highlightKey(
+      note,
+      duration,
+      "left"
+    );
+
+  });
+
+
+  /* -----------------------------------------
+     UPDATE UI
+  ----------------------------------------- */
+
+  updateStatus(
+    `Step ${currentStep + 1}`,
+    `${song.steps.length} steps`
+  );
+
+
+  /* -----------------------------------------
+     MOVE TO NEXT STEP
+  ----------------------------------------- */
+
+  playbackTimer = setTimeout(() => {
+
+    if (!playing) return;
+
+    currentStep++;
+
+    playCurrentStep();
+
+  }, duration * 1000);
+
+}
+
+
+/* =========================================================
+   START PLAYBACK
+========================================================= */
+
+async function startPlayback() {
+
+  if (playing) return;
+
+
+  const song = songs[selectedSong];
+
+
+  if (!song || song.steps.length === 0) {
+
+    updateStatus(
+      "Arrangement needed",
+      "Add your All of Me arrangement first."
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    await ensureAudioReady();
+
+    playing = true;
+
+    updatePlayButton();
+
+    updateLessonStatus("Playing");
+
+    playCurrentStep();
+
+  } catch (error) {
+
+    console.error(error);
+
+    playing = false;
+
+    updatePlayButton();
+
+    updateStatus(
+      "Could not start",
+      "Tap play again."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PAUSE
+========================================================= */
+
+function pausePlayback() {
+
+  if (!playing) return;
+
+
+  playing = false;
+
+
+  if (playbackTimer) {
+
+    clearTimeout(playbackTimer);
+
+    playbackTimer = null;
+
+  }
+
+
+  sampler.releaseAll();
+
+  clearHighlights();
+
+  updatePlayButton();
+
+
+  updateStatus(
+    "Paused",
+    "Press play to continue."
+  );
+
+
+  updateLessonStatus("Paused");
+
+}
+
+
+/* =========================================================
+   REPLAY
+========================================================= */
+
+function replayPlayback() {
+
+  playing = false;
+
+
+  if (playbackTimer) {
+
+    clearTimeout(playbackTimer);
+
+    playbackTimer = null;
+
+  }
+
+
+  currentStep = 0;
+
+
+  sampler.releaseAll();
+
+  clearHighlights();
+
+
+  updatePlayButton();
+
+
+  updateStatus(
+    "Ready",
+    "Press play to begin."
+  );
+
+
+  updateLessonStatus("Ready");
+
+}
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+function finishPlayback() {
+
+  playing = false;
+
+  currentStep = 0;
+
+  playbackTimer = null;
+
+  sampler.releaseAll();
+
+  clearHighlights();
+
+  updatePlayButton();
+
+  updateStatus(
+    "Complete",
+    "Press play to listen again."
+  );
+
+  updateLessonStatus("Complete");
+
+}
+
+
+/* =========================================================
+   PLAY BUTTON UI
+========================================================= */
 
 function updatePlayButton() {
 
@@ -590,9 +816,7 @@ function updatePlayButton() {
       "Pause"
     );
 
-  }
-
-  else {
+  } else {
 
     playIcon.className =
       "ri-play-fill";
@@ -607,270 +831,230 @@ function updatePlayButton() {
 }
 
 
-/* ==========================================
-   PLAY CURRENT STEP
-========================================== */
+/* =========================================================
+   STATUS
+========================================================= */
 
-function playCurrentStep() {
+function updateStatus(
+  mainText,
+  subText
+) {
 
-  if (!playing) {
+  playbackStatus.textContent =
+    mainText;
+
+  playbackSubstatus.textContent =
+    subText;
+
+  lessonStatus.textContent =
+    mainText;
+
+}
+
+
+/* =========================================================
+   LESSON STATUS
+========================================================= */
+
+function updateLessonStatus(status) {
+
+  lessonStatus.textContent =
+    status;
+
+}
+
+
+/* =========================================================
+   PIECE UI
+========================================================= */
+
+function updatePieceUI() {
+
+  const song = songs[selectedSong];
+
+  if (!song) return;
+
+
+  mainPieceTitle.textContent =
+    song.title;
+
+
+  mainPieceDescription.textContent =
+    song.description;
+
+
+  pianoPieceName.textContent =
+    song.title;
+
+
+  updateNotePreview();
+
+
+  replayPlayback();
+
+
+  if (selectedSong === "allofme") {
+
+    updateStatus(
+      "Arrangement needed",
+      "Your arrangement will appear here."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   NOTE PREVIEW
+========================================================= */
+
+function updateNotePreview() {
+
+  const song = songs[selectedSong];
+
+  notePreview.innerHTML = "";
+
+
+  if (!song || song.steps.length === 0) {
+
+    const empty = document.createElement("div");
+
+    empty.className = "preview-note";
+
+    empty.textContent =
+      "Waiting for arrangement";
+
+    notePreview.appendChild(empty);
 
     return;
 
   }
 
 
-  const song =
-    getSong();
+  const previewNotes = [];
 
 
-  if (
-    currentStep >=
-    song.steps.length
-  ) {
+  song.steps.slice(0, 4).forEach(step => {
 
-    finishSong();
+    if (step.right[0]) {
 
-    return;
+      previewNotes.push(
+        step.right[0]
+      );
 
-  }
+    }
 
-
-  const step =
-    song.steps[currentStep];
+  });
 
 
-  const duration =
-    step.duration /
-    speed;
+  previewNotes.forEach(note => {
 
+    const item =
+      document.createElement("div");
 
-  const notesToShow = [];
+    item.className =
+      "preview-note";
 
+    item.textContent =
+      note;
 
-  if (
-    practiceMode === "left"
-  ) {
+    notePreview.appendChild(item);
 
-    playNotes(
-      step.left,
-      duration,
-      "left"
-    );
-
-    notesToShow.push(
-      ...step.left
-    );
-
-  }
-
-
-  else if (
-    practiceMode === "right"
-  ) {
-
-    playNotes(
-      step.right,
-      duration,
-      "right"
-    );
-
-    notesToShow.push(
-      ...step.right
-    );
-
-  }
-
-
-  else {
-
-    playNotes(
-      step.left,
-      duration,
-      "left"
-    );
-
-    playNotes(
-      step.right,
-      duration,
-      "right"
-    );
-
-    notesToShow.push(
-      ...step.left,
-      ...step.right
-    );
-
-  }
-
-
-  showNotes(
-    [...new Set(notesToShow)]
-  );
-
-
-  currentStep++;
-
-
-  timer =
-    setTimeout(
-      playCurrentStep,
-      duration * 1000
-    );
+  });
 
 }
 
 
-/* ==========================================
-   START / RESUME
-========================================== */
+/* =========================================================
+   HAND UI
+========================================================= */
 
-async function startPlayback() {
+function updateHandUI() {
 
-  await startAudio();
+  const names = {
+
+    both: "Both Hands",
+
+    right: "Right Hand",
+
+    left: "Left Hand"
+
+  };
 
 
-  if (playing) {
+  lessonModeTitle.textContent =
+    names[practiceMode];
 
-    return;
+
+  replayPlayback();
+
+}
+
+
+/* =========================================================
+   SPEED UI
+========================================================= */
+
+function updateSpeedUI() {
+
+  speedDisplay.textContent =
+    `${playbackSpeed}×`;
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+
+/* PIECE */
+
+pieceSelect.addEventListener(
+  "change",
+  () => {
+
+    selectedSong =
+      pieceSelect.value;
+
+    updatePieceUI();
 
   }
+);
 
 
-  const song =
-    getSong();
+/* HAND */
 
+handSelect.addEventListener(
+  "change",
+  () => {
 
-  if (
-    currentStep >=
-    song.steps.length
-  ) {
+    practiceMode =
+      handSelect.value;
 
-    currentStep = 0;
-
-  }
-
-
-  playing = true;
-
-  paused = false;
-
-
-  statusText.textContent =
-    "Playing";
-
-
-  updatePlayButton();
-
-
-  playCurrentStep();
-
-}
-
-
-/* ==========================================
-   PAUSE
-========================================== */
-
-function pausePlayback() {
-
-  if (!playing) {
-
-    return;
+    updateHandUI();
 
   }
+);
 
 
-  playing = false;
+/* SPEED */
 
-  paused = true;
+speedSelect.addEventListener(
+  "change",
+  () => {
 
+    playbackSpeed =
+      Number(speedSelect.value);
 
-  clearTimeout(timer);
+    updateSpeedUI();
 
-  timer = null;
-
-
-  pianoSampler.releaseAll();
-
-
-  statusText.textContent =
-    "Paused";
+  }
+);
 
 
-  updatePlayButton();
-
-}
-
-
-/* ==========================================
-   REPLAY
-========================================== */
-
-function replayPlayback() {
-
-  clearTimeout(timer);
-
-  timer = null;
-
-
-  playing = false;
-
-  paused = false;
-
-
-  pianoSampler.releaseAll();
-
-
-  currentStep = 0;
-
-
-  showNotes([]);
-
-
-  statusText.textContent =
-    "Ready";
-
-
-  updatePlayButton();
-
-}
-
-
-/* ==========================================
-   FINISH
-========================================== */
-
-function finishSong() {
-
-  clearTimeout(timer);
-
-  timer = null;
-
-
-  playing = false;
-
-  paused = false;
-
-
-  pianoSampler.releaseAll();
-
-
-  currentStep = 0;
-
-
-  statusText.textContent =
-    "Finished";
-
-
-  updatePlayButton();
-
-}
-
-
-/* ==========================================
-   MAIN PLAY / PAUSE BUTTON
-========================================== */
+/* PLAY / PAUSE */
 
 playButton.addEventListener(
   "click",
@@ -880,9 +1064,7 @@ playButton.addEventListener(
 
       pausePlayback();
 
-    }
-
-    else {
+    } else {
 
       await startPlayback();
 
@@ -892,11 +1074,9 @@ playButton.addEventListener(
 );
 
 
-/* ==========================================
-   REPLAY BUTTON
-========================================== */
+/* REPLAY */
 
-restartButton.addEventListener(
+replayButton.addEventListener(
   "click",
   () => {
 
@@ -906,255 +1086,33 @@ restartButton.addEventListener(
 );
 
 
-/* ==========================================
-   PIANO MANUAL PLAY
-========================================== */
+/* SETTINGS */
 
-piano.addEventListener(
-  "pointerdown",
-  async event => {
-
-    const key =
-      event.target.closest(".key");
-
-
-    if (!key) return;
-
-
-    await startAudio();
-
-
-    const note =
-      key.dataset.note;
-
-
-    pianoSampler.triggerAttackRelease(
-      note,
-      0.9
-    );
-
-
-    key.classList.add(
-      "active",
-      "right-hand"
-    );
-
-
-    setTimeout(() => {
-
-      key.classList.remove(
-        "active",
-        "right-hand"
-      );
-
-    }, 900);
-
-
-    showNotes([note]);
-
-  }
-);
-
-
-/* ==========================================
-   DROPDOWN SYSTEM
-========================================== */
-
-const controlWrappers =
-  document.querySelectorAll(
-    ".control-wrapper"
-  );
-
-
-controlWrappers.forEach(wrapper => {
-
-  const button =
-    wrapper.querySelector(
-      ".quick-control"
-    );
-
-
-  button.addEventListener(
+document
+  .getElementById("settingsButton")
+  .addEventListener(
     "click",
-    event => {
+    () => {
 
-      event.stopPropagation();
-
-
-      controlWrappers.forEach(
-        other => {
-
-          if (
-            other !== wrapper
-          ) {
-
-            other.classList.remove(
-              "open"
-            );
-
-          }
-
-        }
-      );
-
-
-      wrapper.classList.toggle(
-        "open"
+      updateStatus(
+        "Settings",
+        "Settings will be available soon."
       );
 
     }
   );
 
-});
 
+/* =========================================================
+   INITIALIZE
+========================================================= */
 
-document.addEventListener(
-  "click",
-  () => {
-
-    controlWrappers.forEach(
-      wrapper => {
-
-        wrapper.classList.remove(
-          "open"
-        );
-
-      }
-    );
-
-  }
-);
-
-
-/* ==========================================
-   PIECE SELECTION
-========================================== */
-
-document
-  .querySelectorAll(
-    "[data-piece]"
-  )
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        selectedSong =
-          button.dataset.piece;
-
-
-        replayPlayback();
-
-
-        updatePieceUI();
-
-
-        document
-          .getElementById(
-            "pieceControl"
-          )
-          .querySelector(
-            "span"
-          )
-          .textContent =
-            songs[selectedSong].title;
-
-      }
-    );
-
-  });
-
-
-/* ==========================================
-   HAND SELECTION
-========================================== */
-
-document
-  .querySelectorAll(
-    "[data-hand]"
-  )
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        practiceMode =
-          button.dataset.hand;
-
-
-        const names = {
-
-          both:
-            "Both",
-
-          right:
-            "Right",
-
-          left:
-            "Left"
-
-        };
-
-
-        handControl
-          .querySelector(
-            "span"
-          )
-          .textContent =
-            names[practiceMode];
-
-
-        replayPlayback();
-
-      }
-    );
-
-  });
-
-
-/* ==========================================
-   SPEED SELECTION
-========================================== */
-
-document
-  .querySelectorAll(
-    "[data-speed]"
-  )
-  .forEach(button => {
-
-    button.addEventListener(
-      "click",
-      () => {
-
-        speed =
-          Number(
-            button.dataset.speed
-          );
-
-
-        speedLabel.textContent =
-          `${speed * 100}%`;
-
-
-        replayPlayback();
-
-      }
-    );
-
-  });
-
-
-/* ==========================================
-   INITIAL UI
-========================================== */
+createPiano();
 
 updatePieceUI();
 
-updatePlayButton();
+updateHandUI();
 
-console.log(
-  "Piano Lab Version 2 loaded."
-);
- 
+updateSpeedUI();
+
+updatePlayButton();
