@@ -1143,3 +1143,31 @@ updateHand();
 updateSpeed();
 
 updatePlayButton();
+
+
+
+
+
+
+// ===============================
+// PWA SERVICE WORKER
+// ===============================
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./sw.js")
+      .then((registration) => {
+        console.log(
+          "Piano Lab service worker registered:",
+          registration.scope
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "Piano Lab service worker registration failed:",
+          error
+        );
+      });
+  });
+}
