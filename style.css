@@ -1,407 +1,291 @@
-/* ==========================================
-   PIANO LAB
-   VERSION 2
-========================================== */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --surface-dark: #101216;
+  --surface-dark-2: #181b21;
+  --border: #e5e7eb;
+  --text: #111318;
+  --muted: #737983;
+  --muted-dark: #9ca3af;
+
+  --accent: #6d5dfc;
+  --accent-light: #ece9ff;
+
+  --white-key: #fdfdfd;
+  --white-key-border: #cfd2d7;
+
+  --black-key: #17181c;
+
+  --right-hand: #6d5dfc;
+  --left-hand: #18a673;
+
+  --radius: 16px;
+}
+
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+html {
+  scroll-behavior: smooth;
+}
+
+
+body {
   margin: 0;
-  padding: 0;
-}
+  min-height: 100vh;
 
-
-:root {
-
-  --background: #f4f5f7;
-  --surface: #ffffff;
-  --surface-soft: #f8f8fa;
-
-  --text: #16181d;
-  --muted: #777b84;
-
-  --border: #e4e5e9;
-
-  --dark: #111318;
-  --dark-soft: #1b1d23;
-
-  --accent: #7357ff;
-
-}
-
-
-html,
-body {
-
-  width: 100%;
-  min-height: 100%;
-
-}
-
-
-body {
+  background: var(--bg);
+  color: var(--text);
 
   font-family: "DM Sans", sans-serif;
 
-  background: var(--background);
+  padding-bottom: 360px;
+}
 
-  color: var(--text);
 
-  overflow-x: hidden;
-
+button,
+select {
+  font: inherit;
 }
 
 
 button {
-
-  font-family: inherit;
-
+  border: 0;
   cursor: pointer;
-
 }
 
 
-/* ==========================================
-   ROTATION SCREEN
-========================================== */
-
-.rotate-screen {
-
-  display: none;
-
-}
-
-
-/* ==========================================
-   APP
-========================================== */
-
-.app {
-
-  min-height: 100vh;
-
-  padding-bottom: 470px;
-
-}
-
-
-/* ==========================================
+/* =========================================
    TOP BAR
-========================================== */
+========================================= */
 
 .topbar {
-
   height: 72px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   padding: 0 32px;
 
-  display: flex;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid var(--border);
 
-  align-items: center;
+  position: relative;
+  z-index: 20;
 
-  justify-content: space-between;
-
-  position: sticky;
-
-  top: 0;
-
-  z-index: 50;
-
-  background:
-    rgba(255,255,255,0.94);
-
-  backdrop-filter:
-    blur(20px);
-
-  border-bottom:
-    1px solid var(--border);
-
+  backdrop-filter: blur(14px);
 }
 
 
 .brand {
-
   display: flex;
-
   align-items: center;
-
-  gap: 11px;
-
+  gap: 12px;
 }
 
 
 .brand-mark {
-
-  width: 36px;
-
-  height: 36px;
-
-  border-radius: 10px;
-
-  background: var(--dark);
-
-  color: white;
+  width: 38px;
+  height: 38px;
 
   display: grid;
-
   place-items: center;
 
-  font-size: 18px;
+  border-radius: 11px;
 
+  background: var(--text);
+  color: white;
+
+  font-size: 19px;
 }
 
 
-.brand-label {
-
-  display: block;
-
-  font-size: 8px;
-
+.brand-title {
+  font-family: "Bricolage Grotesque", sans-serif;
   font-weight: 700;
-
-  letter-spacing: 1.8px;
-
-  color: var(--muted);
-
+  font-size: 18px;
+  line-height: 1.1;
 }
 
 
-.brand h1 {
-
-  font-family:
-    "Bricolage Grotesque",
-    sans-serif;
-
-  font-size: 18px;
-
-  line-height: 1;
-
+.brand-subtitle {
+  color: var(--muted);
+  font-size: 11px;
   margin-top: 3px;
-
 }
 
 
 .icon-button {
+  width: 40px;
+  height: 40px;
 
-  width: 38px;
+  display: grid;
+  place-items: center;
 
-  height: 38px;
+  border-radius: 12px;
 
-  border-radius: 10px;
-
-  border:
-    1px solid var(--border);
-
-  background: white;
-
-  color: var(--text);
+  background: #f0f1f3;
+  color: #444850;
 
   font-size: 18px;
-
 }
 
 
-/* ==========================================
-   MAIN
-========================================== */
+.icon-button:active {
+  transform: scale(0.95);
+}
+
+
+/* =========================================
+   MAIN CONTENT
+========================================= */
 
 .main-content {
+  width: min(1050px, calc(100% - 40px));
+  margin: 0 auto;
 
-  width:
-    min(1050px, calc(100% - 48px));
-
-  margin: auto;
-
-  padding-top: 65px;
-
+  padding: 70px 0;
 }
 
 
-/* ==========================================
-   PIECE HEADER
-========================================== */
+.hero-section {
+  max-width: 700px;
+}
 
-.piece-header {
 
+.eyebrow {
   display: flex;
+  align-items: center;
+  gap: 8px;
 
-  align-items: flex-end;
+  color: var(--muted);
 
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+
+.eyebrow span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+
+.hero-section h1 {
+  margin: 12px 0 12px;
+
+  font-family: "Bricolage Grotesque", sans-serif;
+
+  font-size: clamp(38px, 6vw, 70px);
+  line-height: 0.98;
+
+  letter-spacing: -0.045em;
+}
+
+
+.hero-section p {
+  max-width: 600px;
+
+  color: var(--muted);
+
+  font-size: 16px;
+  line-height: 1.7;
+
+  margin: 0;
+}
+
+
+/* =========================================
+   LESSON CARD
+========================================= */
+
+.lesson-card {
+  margin-top: 50px;
+
+  background: var(--surface);
+
+  border: 1px solid var(--border);
+
+  border-radius: 22px;
+
+  padding: 24px;
+}
+
+
+.lesson-card-top {
+  display: flex;
   justify-content: space-between;
-
-  gap: 30px;
-
+  align-items: center;
 }
 
 
 .section-label {
-
-  font-size: 9px;
-
+  font-size: 10px;
   font-weight: 700;
-
-  letter-spacing: 1.7px;
-
+  letter-spacing: 0.12em;
   color: var(--muted);
-
 }
 
 
-.piece-header h2 {
-
-  font-family:
-    "Bricolage Grotesque",
-    sans-serif;
-
-  font-size:
-    clamp(34px, 4vw, 50px);
-
-  line-height: 1;
-
-  letter-spacing: -1.8px;
-
-  margin-top: 8px;
-
+.lesson-card h2 {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 23px;
+  margin: 5px 0 0;
 }
 
 
-.piece-header p {
-
-  color: var(--muted);
-
-  font-size: 14px;
-
-  margin-top: 12px;
-
-}
-
-
-.piece-badge {
-
+.lesson-status {
   display: flex;
-
   align-items: center;
-
   gap: 7px;
 
-  padding:
-    9px 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
 
-  border:
-    1px solid var(--border);
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9ca3af;
+}
+
+
+.note-preview {
+  display: flex;
+  gap: 10px;
+
+  margin-top: 25px;
+}
+
+
+.preview-note {
+  padding: 8px 13px;
 
   border-radius: 9px;
 
-  background: white;
-
-  color: var(--muted);
-
-  font-size: 11px;
-
-}
-
-
-/* ==========================================
-   NOW PLAYING
-========================================== */
-
-.now-playing {
-
-  margin-top: 35px;
-
-  min-height: 95px;
-
-  border-bottom:
-    1px solid var(--border);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  gap: 20px;
-
-}
-
-
-.now-playing-left {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 7px;
-
-  color: var(--muted);
-
-  font-size: 9px;
-
-  font-weight: 700;
-
-  letter-spacing: 1.4px;
-
-}
-
-
-.live-dot {
-
-  width: 7px;
-
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: var(--accent);
-
-}
-
-
-.current-notes {
-
-  display: flex;
-
-  justify-content: flex-end;
-
-  flex-wrap: wrap;
-
-  gap: 6px;
-
-}
-
-
-.note {
-
-  padding:
-    7px 10px;
-
-  border-radius: 7px;
-
-  background: var(--dark);
-
-  color: white;
-
-  font-size: 11px;
-
-  font-weight: 700;
-
-}
-
-
-.empty-note {
-
-  color: #a2a5ac;
+  background: #f2f3f5;
 
   font-size: 12px;
-
+  font-weight: 600;
 }
 
 
-/* ==========================================
-   PIANO DOCK
-========================================== */
+/* =========================================
+   STICKY PIANO DOCK
+========================================= */
 
 .piano-dock {
-
   position: fixed;
 
   left: 0;
@@ -410,906 +294,858 @@ button {
 
   z-index: 100;
 
-  background:
-    #111318;
-
-  box-shadow:
-    0 -18px 45px
-    rgba(0,0,0,0.18);
-
-}
-
-
-/* ==========================================
-   PIANO INFORMATION
-========================================== */
-
-.piano-info {
-
-  height: 48px;
-
-  padding:
-    0 24px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
+  background: rgba(15, 17, 21, 0.98);
 
   color: white;
 
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow:
+    0 -15px 40px rgba(0, 0, 0, 0.16);
+
+  padding:
+    10px
+    max(12px, env(safe-area-inset-right))
+    calc(9px + env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
 }
 
 
-.piano-name {
+/* =========================================
+   PIANO INFORMATION
+========================================= */
+
+.piano-info {
+  width: min(1120px, 100%);
+  margin: 0 auto 8px;
 
   display: flex;
-
   align-items: center;
+  justify-content: space-between;
+}
 
+
+.piano-product {
+  display: flex;
+  align-items: center;
   gap: 9px;
-
 }
 
 
-.piano-name > i {
+.mini-logo {
+  width: 28px;
+  height: 28px;
 
-  font-size: 17px;
-
-}
-
-
-.piano-name div {
-
-  display: flex;
-
-  align-items: baseline;
-
-  gap: 8px;
-
-}
-
-
-.piano-name strong {
-
-  font-size: 12px;
-
-}
-
-
-.piano-name span {
-
-  color: #777b84;
-
-  font-size: 9px;
-
-}
-
-
-.range-label {
-
-  color: #777b84;
-
-  font-size: 9px;
-
-}
-
-
-/* ==========================================
-   QUICK CONTROLS
-========================================== */
-
-.quick-controls {
-
-  display: flex;
-
-  justify-content: center;
-
-  gap: 6px;
-
-  padding:
-    0 15px 8px;
-
-}
-
-
-.control-wrapper {
-
-  position: relative;
-
-}
-
-
-.quick-control {
-
-  height: 32px;
-
-  padding:
-    0 10px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 6px;
-
-  border:
-    1px solid #303239;
+  display: grid;
+  place-items: center;
 
   border-radius: 8px;
 
-  background:
-    #1b1d23;
+  background: #242832;
 
-  color: #b8bbc2;
-
-  font-size: 10px;
-
-}
-
-
-.quick-control > i:first-child {
+  color: #d8d4ff;
 
   font-size: 14px;
-
 }
 
 
-.quick-control > i:last-child {
-
-  font-size: 13px;
-
-  color: #686c75;
-
+.piano-product-name {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 
-/* ==========================================
-   DROPDOWN MENUS
-========================================== */
-
-.control-menu {
-
-  position: absolute;
-
-  bottom: 39px;
-
-  left: 50%;
-
-  transform:
-    translateX(-50%)
-    translateY(5px);
-
-  min-width: 180px;
-
-  padding: 6px;
-
-  background: #202228;
-
-  border:
-    1px solid #34363e;
-
-  border-radius: 10px;
-
-  box-shadow:
-    0 15px 35px
-    rgba(0,0,0,0.35);
-
-  opacity: 0;
-
-  pointer-events: none;
-
-  transition:
-    opacity 120ms ease,
-    transform 120ms ease;
-
+.piano-piece-name {
+  color: #9ca3af;
+  font-size: 10px;
+  margin-top: 1px;
 }
 
 
-.control-wrapper.open
-.control-menu {
+.piano-range {
+  display: flex;
+  align-items: center;
+  gap: 7px;
 
-  opacity: 1;
+  color: #777e8a;
 
-  pointer-events: auto;
-
-  transform:
-    translateX(-50%)
-    translateY(0);
-
+  font-size: 9px;
+  letter-spacing: 0.08em;
 }
 
 
-.control-menu button {
+.piano-range strong {
+  color: #d3d6dc;
+  font-size: 10px;
+  letter-spacing: 0;
+}
 
-  width: 100%;
 
-  border: none;
+/* =========================================
+   QUICK CONTROLS
+========================================= */
 
-  background: transparent;
-
-  color: #d4d6dc;
-
-  padding:
-    9px 10px;
-
-  border-radius: 7px;
-
-  text-align: left;
+.quick-controls {
+  width: min(1120px, 100%);
+  margin: 0 auto 8px;
 
   display: flex;
+  align-items: center;
 
+  gap: 7px;
+}
+
+
+.quick-select {
+  position: relative;
+
+  min-width: 120px;
+  height: 38px;
+
+  display: flex;
   align-items: center;
 
   gap: 8px;
 
-  font-size: 11px;
+  padding: 0 27px 0 10px;
 
+  border-radius: 10px;
+
+  background: #1c1f25;
+  border: 1px solid #2a2e36;
+
+  color: #dce0e6;
+
+  cursor: pointer;
+
+  overflow: hidden;
 }
 
 
-.control-menu button:hover {
-
-  background: #2a2c33;
-
+.quick-select:active {
+  background: #252932;
 }
 
 
-.control-menu button span {
+.quick-select > i:first-child {
+  flex: 0 0 auto;
 
-  flex: 1;
+  color: #aaa2ff;
 
+  font-size: 15px;
 }
 
 
-.control-menu button small {
+.quick-select-text {
+  min-width: 0;
 
-  color: #777b84;
+  display: flex;
+  flex-direction: column;
+}
 
+
+.quick-select-text small {
   font-size: 8px;
 
+  color: #7f8794;
+
+  line-height: 1;
 }
 
 
-.speed-menu {
+.quick-select select {
+  appearance: none;
+  -webkit-appearance: none;
 
-  min-width: 100px;
+  border: 0;
+  outline: 0;
 
-}
+  background: transparent;
 
+  color: #f2f3f5;
 
-/* ==========================================
-   PIANO STAGE
-========================================== */
+  font-size: 10px;
+  font-weight: 600;
 
-.piano-stage {
-
-  width:
-    min(1120px, calc(100% - 28px));
-
-  height: 250px;
-
-  margin: auto;
-
-  padding: 8px;
-
-  background: #25272d;
-
-  border-radius:
-    12px 12px 4px 4px;
-
-  box-shadow:
-    inset 0 2px 0
-    rgba(255,255,255,0.06),
-
-    0 10px 25px
-    rgba(0,0,0,0.35);
-
-}
-
-
-/* ==========================================
-   PIANO
-========================================== */
-
-.piano {
-
-  position: relative;
+  padding: 3px 0 0;
 
   width: 100%;
 
+  cursor: pointer;
+}
+
+
+.quick-select select option {
+  background: #181b21;
+  color: white;
+}
+
+
+.select-arrow {
+  position: absolute;
+
+  right: 8px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #777e8a;
+
+  pointer-events: none;
+
+  font-size: 15px;
+}
+
+
+/* =========================================
+   PIANO
+========================================= */
+
+.piano-stage {
+  width: min(1120px, 100%);
+  height: 190px;
+
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  border-radius: 13px;
+
+  background: #090a0d;
+
+  border: 1px solid #292d35;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    inset 0 -10px 25px rgba(0, 0, 0, 0.3);
+}
+
+
+.piano {
+  position: relative;
+
+  width: 100%;
   height: 100%;
 
   display: flex;
 
-  overflow: hidden;
-
-  border-radius:
-    8px 8px 4px 4px;
-
-  background: #090a0c;
-
-  touch-action: none;
-
-  user-select: none;
-
+  padding: 0 4px 5px;
 }
 
 
-/* ==========================================
+/* =========================================
    WHITE KEYS
-========================================== */
+========================================= */
 
-.key.white {
-
+.white-key {
   position: relative;
 
   flex: 1;
 
   height: 100%;
 
-  background:
-    linear-gradient(
-      90deg,
-      #ededed,
-      #ffffff 48%,
-      #e3e3e3
-    );
+  background: linear-gradient(
+    to bottom,
+    #ffffff 0%,
+    #f7f7f7 75%,
+    #e2e3e5 100%
+  );
 
-  border-right:
-    1px solid #c8c8c8;
+  border-left: 1px solid #c7c9cd;
+  border-bottom: 4px solid #c1c3c8;
 
-  border-bottom:
-    4px solid #bdbdbd;
+  border-radius: 0 0 6px 6px;
 
-  display: flex;
-
-  align-items: flex-end;
-
-  justify-content: center;
-
-  padding-bottom: 9px;
-
-  color: #85878c;
-
-  font-size: 8px;
+  cursor: pointer;
 
   transition:
-    transform 60ms ease,
-    background 60ms ease;
-
+    background 80ms ease,
+    transform 80ms ease;
 }
 
 
-.key.white:last-child {
-
-  border-right: none;
-
+.white-key:first-child {
+  border-radius: 5px 0 6px 6px;
 }
 
 
-/* ==========================================
+.white-key:last-child {
+  border-radius: 0 5px 6px 6px;
+}
+
+
+.white-key:hover {
+  background: #f0f0f1;
+}
+
+
+.white-key:active {
+  transform: translateY(2px);
+}
+
+
+.white-key.active {
+  background: #dcd8ff;
+
+  box-shadow:
+    inset 0 -5px 0 rgba(109, 93, 252, 0.3);
+}
+
+
+.white-key.active.right-hand {
+  background: #dcd8ff;
+}
+
+
+.white-key.active.left-hand {
+  background: #ccefe3;
+}
+
+
+/* =========================================
    BLACK KEYS
-========================================== */
+========================================= */
 
-.key.black {
-
+.black-key {
   position: absolute;
+
+  top: 0;
+
+  width: 3.05%;
+  height: 61%;
 
   z-index: 5;
 
-  width: 3.4%;
+  background: linear-gradient(
+    to right,
+    #08090b,
+    #25272c 45%,
+    #0a0b0d
+  );
 
-  height: 60%;
+  border: 1px solid #050506;
 
-  transform:
-    translateX(-50%);
-
-  background:
-    linear-gradient(
-      90deg,
-      #050607,
-      #292b30 50%,
-      #050607
-    );
-
-  border-radius:
-    0 0 5px 5px;
+  border-radius: 0 0 5px 5px;
 
   box-shadow:
-    0 7px 9px
-    rgba(0,0,0,0.55);
+    0 5px 8px rgba(0, 0, 0, 0.4);
 
-  color: #70737b;
+  cursor: pointer;
 
-  font-size: 7px;
-
-  display: flex;
-
-  align-items: flex-end;
-
-  justify-content: center;
-
-  padding-bottom: 5px;
-
+  transition:
+    background 80ms ease,
+    transform 80ms ease;
 }
 
 
-/* ==========================================
-   ACTIVE KEYS
-========================================== */
-
-.key.active {
-
-  transform:
-    translateY(3px);
-
+.black-key:hover {
+  background: #303238;
 }
 
 
-.key.black.active {
-
-  transform:
-    translateX(-50%)
-    translateY(3px);
-
+.black-key:active {
+  transform: translateX(-50%) translateY(2px);
 }
 
 
-.key.active.right-hand {
-
-  background:
-    linear-gradient(
-      180deg,
-      #8c76ff,
-      #6246ec
-    ) !important;
-
-  color: white;
+.black-key.active {
+  background: linear-gradient(
+    to bottom,
+    #7770e9,
+    #4f46b8
+  );
 
   box-shadow:
-    0 0 20px
-    rgba(115,87,255,0.5);
-
+    0 3px 5px rgba(0, 0, 0, 0.5);
 }
 
 
-.key.active.left-hand {
-
-  background:
-    linear-gradient(
-      180deg,
-      #3eb99d,
-      #168b73
-    ) !important;
-
-  color: white;
-
-  box-shadow:
-    0 0 20px
-    rgba(35,166,139,0.45);
-
+.black-key.active.left-hand {
+  background: linear-gradient(
+    to bottom,
+    #35b98a,
+    #16825f
+  );
 }
 
 
-/* ==========================================
-   PLAYBACK
-========================================== */
+/* =========================================
+   PLAYBACK BAR
+========================================= */
 
 .playback-bar {
+  width: min(1120px, 100%);
+  margin: 8px auto 0;
 
-  height: 62px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 14px;
-
-  position: relative;
-
-}
-
-
-.playback-icon {
-
-  width: 38px;
-
-  height: 38px;
-
-  border-radius: 50%;
-
-  border:
-    1px solid #303239;
-
-  background:
-    #1b1d23;
-
-  color: #b5b8c0;
+  min-height: 38px;
 
   display: grid;
 
-  place-items: center;
+  grid-template-columns: 1fr auto 1fr;
 
-  font-size: 17px;
-
+  align-items: center;
 }
 
 
-.main-play {
+.playback-left {
+  display: flex;
+  justify-content: flex-start;
+}
 
-  width: 48px;
 
-  height: 48px;
+.playback-right {
+  display: flex;
+  justify-content: flex-end;
+}
 
-  border: none;
+
+.playback-center {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+
+.playback-button {
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 0 10px;
+
+  border-radius: 9px;
+
+  background: #1c1f25;
+
+  color: #dce0e6;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+
+.playback-button:active {
+  transform: scale(0.96);
+}
+
+
+.play-button {
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
 
   border-radius: 50%;
 
   background: white;
-
   color: #111318;
 
-  display: grid;
+  font-size: 17px;
 
-  place-items: center;
-
-  font-size: 20px;
-
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 
-.play-status {
-
-  position: absolute;
-
-  right: 24px;
-
-  color: #777b84;
-
-  font-size: 9px;
-
+.play-button:active {
+  transform: scale(0.93);
 }
 
 
-/* ==========================================
-   FOOTER
-========================================== */
-
-footer {
-
-  width:
-    min(1050px, calc(100% - 48px));
-
-  margin:
-    30px auto;
-
+.playback-text {
   display: flex;
+  flex-direction: column;
 
-  justify-content: space-between;
+  line-height: 1.1;
+}
 
-  color: #aaaeb5;
+
+.playback-text strong {
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+.playback-text span {
+  color: #7e8591;
+  font-size: 8px;
+
+  margin-top: 2px;
+}
+
+
+.current-speed {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #858c98;
 
   font-size: 10px;
-
 }
 
 
-/* ==========================================
-   TABLET
-========================================== */
-
-@media (max-width: 850px) {
-
-  .main-content {
-
-    width:
-      calc(100% - 32px);
-
-    padding-top: 40px;
-
-  }
-
+.current-speed i {
+  font-size: 13px;
 }
 
 
-/* ==========================================
+/* =========================================
+   ORIENTATION SCREEN
+========================================= */
+
+.orientation-screen {
+  display: none;
+}
+
+
+/* =========================================
    MOBILE LANDSCAPE
-========================================== */
+========================================= */
 
-@media
-(max-width: 700px)
-and
-(orientation: landscape) {
+@media (orientation: landscape) and (max-height: 600px) {
 
-  .app {
-
-    padding-bottom: 285px;
-
+  body {
+    padding-bottom: 230px;
   }
 
 
   .topbar {
-
-    height: 50px;
+    height: 48px;
 
     padding: 0 14px;
-
   }
 
 
   .brand-mark {
+    width: 29px;
+    height: 29px;
 
-    width: 28px;
-    height: 28px;
+    border-radius: 8px;
 
     font-size: 14px;
-
   }
 
 
-  .brand-label {
-
-    font-size: 6px;
-
+  .brand-title {
+    font-size: 13px;
   }
 
 
-  .brand h1 {
-
-    font-size: 14px;
-
+  .brand-subtitle {
+    display: none;
   }
 
 
   .icon-button {
-
     width: 32px;
     height: 32px;
 
+    border-radius: 9px;
+
+    font-size: 15px;
   }
 
 
   .main-content {
+    width: calc(100% - 28px);
 
-    width:
-      calc(100% - 24px);
-
-    padding-top: 20px;
-
+    padding: 25px 0 40px;
   }
 
 
-  .piece-header h2 {
-
-    font-size: 26px;
-
+  .hero-section h1 {
+    font-size: 34px;
   }
 
 
-  .piece-header p {
-
-    display: none;
-
+  .hero-section p {
+    font-size: 12px;
+    line-height: 1.5;
   }
 
 
-  .piece-badge {
-
-    display: none;
-
+  .lesson-card {
+    margin-top: 25px;
+    padding: 16px;
   }
 
 
-  .now-playing {
+  .lesson-card h2 {
+    font-size: 17px;
+  }
 
-    margin-top: 18px;
 
-    min-height: 45px;
+  .note-preview {
+    margin-top: 15px;
+  }
 
+
+  /* COMPACT DOCK */
+
+  .piano-dock {
+    padding-top: 6px;
   }
 
 
   .piano-info {
-
-    height: 34px;
-
-    padding: 0 13px;
-
+    margin-bottom: 4px;
   }
 
 
-  .piano-name > i {
-
-    font-size: 14px;
-
-  }
-
-
-  .piano-name strong {
-
+  .piano-product-name {
     font-size: 10px;
-
   }
 
 
-  .piano-name span {
-
-    display: none;
-
-  }
-
-
-  .range-label {
-
+  .piano-piece-name {
     font-size: 8px;
+  }
 
+
+  .mini-logo {
+    width: 23px;
+    height: 23px;
+
+    font-size: 12px;
+  }
+
+
+  .piano-range {
+    font-size: 7px;
+  }
+
+
+  .piano-range strong {
+    font-size: 8px;
   }
 
 
   .quick-controls {
+    margin-bottom: 5px;
 
-    padding-bottom: 5px;
-
+    gap: 5px;
   }
 
 
-  .quick-control {
+  .quick-select {
+    min-width: 0;
+    flex: 1;
 
-    height: 27px;
+    height: 31px;
 
-    padding:
-      0 8px;
+    border-radius: 8px;
 
-    font-size: 9px;
+    gap: 5px;
 
+    padding-left: 7px;
+    padding-right: 20px;
   }
 
+
+  .quick-select > i:first-child {
+    font-size: 12px;
+  }
+
+
+  .quick-select-text small {
+    font-size: 6px;
+  }
+
+
+  .quick-select select {
+    font-size: 8px;
+    padding-top: 2px;
+  }
+
+
+  .select-arrow {
+    right: 5px;
+    font-size: 12px;
+  }
+
+
+  /* SMALL PIANO */
 
   .piano-stage {
+    height: 112px;
 
-    height: 175px;
+    border-radius: 9px;
+  }
 
-    width:
-      calc(100% - 14px);
 
-    padding: 5px;
-
+  .black-key {
+    height: 60%;
+    width: 3%;
   }
 
 
   .playback-bar {
+    min-height: 31px;
 
-    height: 43px;
-
+    margin-top: 5px;
   }
 
 
-  .main-play {
+  .playback-button {
+    height: 28px;
 
-    width: 36px;
-    height: 36px;
+    padding: 0 8px;
 
-    font-size: 16px;
-
+    font-size: 8px;
   }
 
 
-  .playback-icon {
+  .play-button {
+    width: 31px;
+    height: 31px;
 
-    width: 29px;
-    height: 29px;
-
-    font-size: 13px;
-
+    font-size: 14px;
   }
 
 
-  .play-status {
+  .playback-center {
+    gap: 6px;
+  }
 
+
+  .playback-text strong {
+    font-size: 8px;
+  }
+
+
+  .playback-text span {
     display: none;
-
   }
 
 
-  footer {
-
-    display: none;
-
+  .current-speed {
+    font-size: 8px;
   }
 
 }
 
 
-/* ==========================================
-   MOBILE PORTRAIT
-========================================== */
+/* =========================================
+   VERY SHORT LANDSCAPE PHONES
+========================================= */
 
-@media
-(max-width: 700px)
-and
-(orientation: portrait) {
+@media (orientation: landscape) and (max-height: 430px) {
 
-  .app {
-
-    display: none;
-
+  body {
+    padding-bottom: 205px;
   }
 
 
-  .rotate-screen {
+  .main-content {
+    padding-top: 15px;
+  }
 
+
+  .hero-section h1 {
+    font-size: 28px;
+  }
+
+
+  .hero-section p {
+    display: none;
+  }
+
+
+  .lesson-card {
+    margin-top: 15px;
+  }
+
+
+  .piano-stage {
+    height: 94px;
+  }
+
+}
+
+
+/* =========================================
+   PORTRAIT
+========================================= */
+
+@media (orientation: portrait) {
+
+  body {
+    overflow: hidden;
+  }
+
+
+  .orientation-screen {
     position: fixed;
 
     inset: 0;
 
-    display: flex;
+    z-index: 1000;
 
-    flex-direction: column;
+    display: grid;
+    place-items: center;
 
-    align-items: center;
+    padding: 24px;
 
-    justify-content: center;
+    background: #101216;
+    color: white;
+  }
+
+
+  .orientation-card {
+    width: min(330px, 100%);
 
     text-align: center;
 
-    background: #111318;
+    padding: 30px 24px;
 
-    color: white;
+    border-radius: 22px;
 
-    padding: 30px;
+    background: #181b21;
 
+    border: 1px solid #2a2e36;
   }
 
 
-  .rotate-icon {
+  .orientation-icon {
+    width: 58px;
+    height: 58px;
 
-    width: 70px;
-
-    height: 70px;
-
-    border-radius: 20px;
-
-    background: #1d1f25;
+    margin: 0 auto 18px;
 
     display: grid;
-
     place-items: center;
 
-    font-size: 34px;
+    border-radius: 17px;
 
-    margin-bottom: 20px;
+    background: #272a32;
 
-  }
-
-
-  .rotate-screen h2 {
-
-    font-family:
-      "Bricolage Grotesque",
-      sans-serif;
+    color: #aaa2ff;
 
     font-size: 25px;
-
   }
 
 
-  .rotate-screen p {
+  .orientation-card h2 {
+    font-family: "Bricolage Grotesque", sans-serif;
 
-    max-width: 280px;
+    margin: 0 0 8px;
 
-    margin-top: 9px;
+    font-size: 23px;
+  }
 
-    color: #969aa4;
+
+  .orientation-card p {
+    margin: 0;
+
+    color: #9ca3af;
 
     font-size: 13px;
-
-    line-height: 1.5;
-
+    line-height: 1.6;
   }
 
 }
- 
