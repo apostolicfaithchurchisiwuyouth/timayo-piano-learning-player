@@ -1,246 +1,406 @@
 // ==========================================
 // PIANO LEARNING PLAYER
-// Version 1 - Piano Sound + Key Animation
+// 3 OCTAVE VERSION
 // ==========================================
 
 
 // ------------------------------------------
-// 1. AUDIO ENGINE
+// DOM ELEMENTS
 // ------------------------------------------
 
-let audioContext;
+const piano = document.getElementById("piano");
 
-function startAudio() {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const statusText =
+  document.getElementById("status");
+
+const currentNotes =
+  document.getElementById("currentNotes");
+
+const speedSelect =
+  document.getElementById("speedSelect");
+
+
+// ------------------------------------------
+// CREATE THE PIANO
+// ------------------------------------------
+
+const noteNames = [
+  "C",
+  "C#",
+  "D",
+  "D#",
+  "E",
+  "F",
+  "F#",
+  "G",
+  "G#",
+  "A",
+  "A#",
+  "B"
+];
+
+const whiteNotes = [
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "A",
+  "B"
+];
+
+const blackNotes = [
+  "C#",
+  "D#",
+  "F#",
+  "G#",
+  "A#"
+];
+
+
+// Our piano range:
+// C3 → C6
+
+const pianoNotes = [];
+
+for (let octave = 3; octave <= 5; octave++) {
+
+  noteNames.forEach(note => {
+
+    pianoNotes.push(
+      `${note}${octave}`
+    );
+
+  });
+
+}
+
+// Add final C6
+pianoNotes.push("C6");
+
+
+// Create white keys first
+
+const whiteKeyNotes =
+  pianoNotes.filter(note => {
+
+    const name =
+      note.replace(/[0-9]/g, "");
+
+    return whiteNotes.includes(name);
+
+  });
+
+
+whiteKeyNotes.forEach(note => {
+
+  const key =
+    document.createElement("div");
+
+  key.className =
+    "key white";
+
+  key.dataset.note = note;
+
+  key.textContent = note;
+
+  piano.appendChild(key);
+
+});
+
+
+// ------------------------------------------
+// CREATE BLACK KEYS
+// ------------------------------------------
+
+function createBlackKeys() {
+
+  const totalWhiteKeys =
+    whiteKeyNotes.length;
+
+  pianoNotes.forEach(note => {
+
+    const name =
+      note.replace(/[0-9]/g, "");
+
+    if (!blackNotes.includes(name)) {
+      return;
+    }
+
+
+    const octave =
+      Number(
+        note.match(/[0-9]/)[0]
+      );
+
+
+    // Position of the black key
+    // within each octave
+
+    const blackPositions = {
+      "C#": 1,
+      "D#": 2,
+      "F#": 4,
+      "G#": 5,
+      "A#": 6
+    };
+
+
+    const positionInOctave =
+      blackPositions[name];
+
+
+    const octaveOffset =
+      (octave - 3) * 7;
+
+
+    const whiteKeyPosition =
+      octaveOffset +
+      positionInOctave;
+
+
+    const left =
+      (whiteKeyPosition /
+        totalWhiteKeys) * 100;
+
+
+    const key =
+      document.createElement("div");
+
+    key.className =
+      "key black";
+
+    key.dataset.note =
+      note;
+
+    key.textContent =
+      note;
+
+
+    key.style.left =
+      `${left - 1.7}%`;
+
+
+    piano.appendChild(key);
+
+  });
+
+}
+
+createBlackKeys();
+
+
+// ------------------------------------------
+// REAL PIANO SAMPLER
+// ------------------------------------------
+
+const pianoSampler =
+  new Tone.Sampler({
+
+    urls: {
+      A1: "A1.mp3",
+      A2: "A2.mp3",
+      A3: "A3.mp3",
+      A4: "A4.mp3",
+      A5: "A5.mp3"
+    },
+
+    release: 1,
+
+    baseUrl:
+      "https://tonejs.github.io/audio/salamander/"
+
+  }).toDestination();
+
+
+// ------------------------------------------
+// AUDIO START
+// ------------------------------------------
+
+async function startAudio() {
+
+  await Tone.start();
+
+  if (Tone.context.state !== "running") {
+
+    await Tone.context.resume();
+
   }
 
-  if (audioContext.state === "suspended") {
-    audioContext.resume();
-  }
 }
 
 
 // ------------------------------------------
-// 2. NOTE FREQUENCIES
-// ------------------------------------------
-
-const frequencies = {
-  "C4": 261.63,
-  "C#4": 277.18,
-  "D4": 293.66,
-  "D#4": 311.13,
-  "E4": 329.63,
-  "F4": 349.23,
-  "F#4": 369.99,
-  "G4": 392.00,
-  "G#4": 415.30,
-  "A4": 440.00,
-  "A#4": 466.16,
-  "B4": 493.88,
-  "C5": 523.25
-};
-
-
-// ------------------------------------------
-// 3. FIND A PIANO KEY
+// GET PIANO KEY
 // ------------------------------------------
 
 function getKey(note) {
+
   return document.querySelector(
     `.key[data-note="${note}"]`
   );
+
 }
 
 
 // ------------------------------------------
-// 4. SHOW CURRENT NOTES
+// SHOW NOTES
 // ------------------------------------------
 
 function showNotes(notes) {
 
-  const container =
-    document.getElementById("currentNotes");
+  currentNotes.innerHTML = "";
 
-  container.innerHTML = "";
+  if (!notes.length) {
+
+    currentNotes.innerHTML =
+      `<span class="empty-note">—</span>`;
+
+    return;
+
+  }
+
 
   notes.forEach(note => {
 
     const item =
       document.createElement("span");
 
-    item.className = "note";
-    item.textContent = note;
+    item.className =
+      "note";
 
-    container.appendChild(item);
+    item.textContent =
+      note;
+
+    currentNotes.appendChild(item);
 
   });
+
 }
 
 
 // ------------------------------------------
-// 5. PLAY A NOTE
+// PLAY NOTES
 // ------------------------------------------
 
-function playNote(note, duration = 700) {
+function playNotes(
+  notes,
+  duration = 0.7,
+  hand = "right"
+) {
 
-  startAudio();
-
-  const frequency = frequencies[note];
-
-  if (!frequency) return;
-
-  const oscillator =
-    audioContext.createOscillator();
-
-  const gain =
-    audioContext.createGain();
-
-
-  oscillator.type = "triangle";
-
-  oscillator.frequency.value =
-    frequency;
-
-
-  oscillator.connect(gain);
-  gain.connect(audioContext.destination);
-
-
-  const now =
-    audioContext.currentTime;
-
-
-  // Gentle attack
-  gain.gain.setValueAtTime(
-    0,
-    now
-  );
-
-  gain.gain.linearRampToValueAtTime(
-    0.35,
-    now + 0.03
-  );
-
-
-  // Gentle release
-  gain.gain.setValueAtTime(
-    0.35,
-    now + duration / 1000 - 0.15
-  );
-
-  gain.gain.linearRampToValueAtTime(
-    0,
-    now + duration / 1000
-  );
-
-
-  oscillator.start(now);
-
-  oscillator.stop(
-    now + duration / 1000
-  );
-
-
-  // Highlight the key
-  const key = getKey(note);
-
-  if (key) {
-
-    key.classList.add("active");
-
-    setTimeout(() => {
-      key.classList.remove("active");
-    }, duration);
-
+  if (!notes || !notes.length) {
+    return;
   }
-}
 
 
-// ------------------------------------------
-// 6. PLAY MULTIPLE NOTES TOGETHER
-// ------------------------------------------
+  pianoSampler.triggerAttackRelease(
+    notes,
+    duration
+  );
 
-function playChord(notes, duration = 700) {
 
   showNotes(notes);
 
+
   notes.forEach(note => {
-    playNote(note, duration);
+
+    const key =
+      getKey(note);
+
+    if (!key) return;
+
+
+    key.classList.add(
+      "active",
+      `${hand}-hand`
+    );
+
+
+    setTimeout(() => {
+
+      key.classList.remove(
+        "active",
+        "right-hand",
+        "left-hand"
+      );
+
+    }, duration * 1000);
+
   });
 
 }
 
 
 // ------------------------------------------
-// 7. MAKE THE PHYSICAL PIANO PLAYABLE
+// TOUCH / CLICK PLAYING
 // ------------------------------------------
 
-document.querySelectorAll(".key")
-  .forEach(key => {
+document.addEventListener(
+  "pointerdown",
+  async event => {
 
-    key.addEventListener("pointerdown", () => {
+    const key =
+      event.target.closest(".key");
 
-      const note =
-        key.dataset.note;
+    if (!key) return;
 
-      startAudio();
 
-      playNote(note);
+    await startAudio();
 
-      showNotes([note]);
 
-    });
+    const note =
+      key.dataset.note;
 
-  });
+
+    playNotes(
+      [note],
+      0.8,
+      "right"
+    );
+
+  }
+);
 
 
 // ------------------------------------------
-// 8. OUR FIRST TEST SONG
+// TEST SONG DATA
 // ------------------------------------------
+
+// Later, this will be replaced
+// with your learning arrangement.
 
 const testSong = [
 
   {
-    notes: ["C4"],
-    duration: 600
+    left: ["C3"],
+    right: ["C4", "E4", "G4"],
+    duration: 1
   },
 
   {
-    notes: ["D4"],
-    duration: 600
+    left: ["A2"],
+    right: ["A3", "C4", "E4"],
+    duration: 1
   },
 
   {
-    notes: ["E4"],
-    duration: 600
+    left: ["F3"],
+    right: ["A3", "C4", "F4"],
+    duration: 1
   },
 
   {
-    notes: ["C4"],
-    duration: 600
-  },
-
-  {
-    notes: ["C4", "E4", "G4"],
-    duration: 900
-  },
-
-  {
-    notes: ["F4", "A4", "C5"],
-    duration: 900
-  },
-
-  {
-    notes: ["G4", "B4", "D5"],
-    duration: 900
+    left: ["G3"],
+    right: ["B3", "D4", "G4"],
+    duration: 1
   }
 
 ];
 
 
 // ------------------------------------------
-// 9. SONG PLAYER
+// PLAYBACK VARIABLES
 // ------------------------------------------
 
 let currentStep = 0;
@@ -249,19 +409,35 @@ let playing = false;
 
 let timer = null;
 
+let practiceMode = "both";
 
-function playSong() {
+
+// ------------------------------------------
+// PLAY SONG
+// ------------------------------------------
+
+async function playSong() {
 
   if (playing) return;
 
+
+  await startAudio();
+
+
   playing = true;
 
-  document.getElementById("status")
-    .textContent = "Playing...";
+  statusText.textContent =
+    "Playing...";
+
 
   playNextStep();
+
 }
 
+
+// ------------------------------------------
+// PLAY NEXT STEP
+// ------------------------------------------
 
 function playNextStep() {
 
@@ -274,10 +450,11 @@ function playNextStep() {
 
     currentStep = 0;
 
-    document.getElementById("status")
-      .textContent = "Finished";
+    statusText.textContent =
+      "Finished";
 
     return;
+
   }
 
 
@@ -286,19 +463,55 @@ function playNextStep() {
 
 
   const speed =
-    Number(
-      document.getElementById("speedSelect").value
-    );
+    Number(speedSelect.value);
 
 
   const duration =
     step.duration / speed;
 
 
-  playChord(
-    step.notes,
-    duration
-  );
+  if (
+    practiceMode === "right"
+  ) {
+
+    playNotes(
+      step.right,
+      duration,
+      "right"
+    );
+
+  }
+
+
+  else if (
+    practiceMode === "left"
+  ) {
+
+    playNotes(
+      step.left,
+      duration,
+      "left"
+    );
+
+  }
+
+
+  else {
+
+    playNotes(
+      step.left,
+      duration,
+      "left"
+    );
+
+
+    playNotes(
+      step.right,
+      duration,
+      "right"
+    );
+
+  }
 
 
   currentStep++;
@@ -306,13 +519,14 @@ function playNextStep() {
 
   timer = setTimeout(
     playNextStep,
-    duration
+    duration * 1000
   );
+
 }
 
 
 // ------------------------------------------
-// 10. PAUSE
+// PAUSE
 // ------------------------------------------
 
 function pauseSong() {
@@ -321,13 +535,16 @@ function pauseSong() {
 
   clearTimeout(timer);
 
-  document.getElementById("status")
-    .textContent = "Paused";
+  pianoSampler.releaseAll();
+
+  statusText.textContent =
+    "Paused";
+
 }
 
 
 // ------------------------------------------
-// 11. RESTART
+// RESTART
 // ------------------------------------------
 
 function restartSong() {
@@ -336,52 +553,105 @@ function restartSong() {
 
   clearTimeout(timer);
 
+  pianoSampler.releaseAll();
+
   currentStep = 0;
 
-  document.getElementById("status")
-    .textContent = "Ready to play";
 
-  document.getElementById("currentNotes")
-    .innerHTML =
-    '<span class="empty-note">—</span>';
+  statusText.textContent =
+    "Ready";
+
+
+  showNotes([]);
+
 }
 
 
 // ------------------------------------------
-// 12. BUTTONS
+// BUTTONS
 // ------------------------------------------
 
-document.getElementById("playButton")
-  .addEventListener("click", () => {
-
-    startAudio();
-
-    playSong();
-
-  });
+document
+  .getElementById("playButton")
+  .addEventListener(
+    "click",
+    playSong
+  );
 
 
-document.getElementById("pauseButton")
-  .addEventListener("click", () => {
+document
+  .getElementById("pauseButton")
+  .addEventListener(
+    "click",
+    pauseSong
+  );
 
-    pauseSong();
 
-  });
-
-
-document.getElementById("restartButton")
-  .addEventListener("click", () => {
-
-    restartSong();
-
-  });
+document
+  .getElementById("restartButton")
+  .addEventListener(
+    "click",
+    restartSong
+  );
 
 
 // ------------------------------------------
-// 13. INITIAL MESSAGE
+// PRACTICE MODE
+// ------------------------------------------
+
+document
+  .querySelectorAll(".mode-button")
+  .forEach(button => {
+
+    button.addEventListener(
+      "click",
+      () => {
+
+        practiceMode =
+          button.dataset.mode;
+
+
+        document
+          .querySelectorAll(
+            ".mode-button"
+          )
+          .forEach(btn => {
+
+            btn.classList.remove(
+              "active"
+            );
+
+          });
+
+
+        button.classList.add(
+          "active"
+        );
+
+
+        const titles = {
+          both: "Both Hands",
+          right: "Right Hand",
+          left: "Left Hand"
+        };
+
+
+        document.getElementById(
+          "modeTitle"
+        ).textContent =
+          titles[practiceMode];
+
+      }
+    );
+
+  });
+
+
+// ------------------------------------------
+// READY
 // ------------------------------------------
 
 console.log(
-  "Piano Learning Player loaded successfully."
+  "3 Octave Piano Learning Player loaded."
 );
  
